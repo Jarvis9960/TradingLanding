@@ -42,16 +42,18 @@ export default function DramaticSection() {
   )
 
   return (
-    <section ref={sectionRef} className="relative z-10 overflow-hidden py-40 px-4 md:px-8 bg-black">
-      {/* Dramatic background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d4af37]/5 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/70 to-transparent" aria-hidden />
     <motion.section
       initial={shouldReduceMotion ? "visible" : "hidden"}
       whileInView="visible"
       viewport={{ once: true, amount: 0.4 }}
-      className="relative py-40 px-4 md:px-8 bg-black overflow-hidden"
+      className="relative z-10 overflow-hidden py-40 px-4 md:px-8 bg-black"
     >
+      {/* Dramatic background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#d4af37]/5 to-transparent" />
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/70 to-transparent"
+        aria-hidden
+      />
       {/* Dramatic background gradient */}
       <motion.div
         aria-hidden
