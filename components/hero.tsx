@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, Suspense } from "react"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, ArrowUpRight } from "lucide-react"
 import dynamic from "next/dynamic"
 
 const CandleChart3D = dynamic(() => import("@/components/candle-chart-3d"), {
@@ -35,6 +35,24 @@ export default function Hero() {
 
     return () => observer.disconnect()
   }, [])
+
+  const metrics = [
+    {
+      value: "99.7%",
+      label: "Signal Accuracy",
+      description: "Validated across live and historical data",
+    },
+    {
+      value: "50ms",
+      label: "Execution Speed",
+      description: "Lightning-fast, emotionless order flow",
+    },
+    {
+      value: "24/7",
+      label: "Active Monitoring",
+      description: "Always on, always watching the markets",
+    },
+  ]
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center px-4 opacity-0">
@@ -70,19 +88,24 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 text-center max-w-5xl mx-auto">
-        <div className="animate-blur-to-sharp" style={{ animationDelay: "0.2s", opacity: 0 }}>
-          <h1 className="font-[family-name:var(--font-playfair)] text-6xl md:text-8xl font-bold mb-6 leading-tight">
-            <span className="inline-block">✦</span>{" "}
+        <div className="animate-blur-to-sharp space-y-4" style={{ animationDelay: "0.2s", opacity: 0 }}>
+          <p className="text-base md:text-lg uppercase tracking-[0.4em] text-gray-400 flex items-center justify-center gap-2">
+            <span className="h-px w-10 bg-[#d4af37]/40 hidden md:block" aria-hidden />
+            Built by traders
+            <ArrowUpRight className="w-5 h-5 text-[#d4af37]" aria-hidden />
+            for traders
+            <span className="h-px w-10 bg-[#d4af37]/40 hidden md:block" aria-hidden />
+          </p>
+          <h1 className="font-[family-name:var(--font-playfair)] text-5xl md:text-7xl lg:text-8xl font-bold leading-tight">
             <span className="bg-gradient-to-r from-white via-[#d4af37] to-white bg-clip-text text-transparent">
-              Legacy Through Precision
-            </span>{" "}
-            <span className="inline-block">✦</span>
+              Quantitative. Relentless. Real.
+            </span>
           </h1>
         </div>
 
         <div className="animate-fade-in-up mb-12" style={{ animationDelay: "0.6s", opacity: 0 }}>
           <p className="text-xl md:text-3xl text-gray-300 font-light tracking-wide">
-            {"India's First Quantitative Forex Edge"}
+            {"India's first quantitative forex hedge."}
           </p>
         </div>
 
@@ -94,6 +117,37 @@ export default function Hero() {
             Join the Revolution
             <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
+        </div>
+
+        <div className="mt-16 animate-fade-in-up" style={{ animationDelay: "1.3s", opacity: 0 }}>
+          <div className="grid gap-6 md:grid-cols-3">
+            {metrics.map((metric) => (
+              <div
+                key={metric.label}
+                className="glass rounded-2xl p-6 text-left backdrop-blur-sm border border-white/5 hover:border-[#d4af37]/60 transition-all duration-300"
+              >
+                <div className="text-4xl md:text-5xl font-bold text-white mb-2">
+                  {metric.value}
+                </div>
+                <div className="text-sm uppercase tracking-[0.3em] text-[#d4af37] mb-2">{metric.label}</div>
+                <p className="text-sm text-gray-400">{metric.description}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 flex items-end gap-2 h-32 opacity-70">
+            {Array.from({ length: 12 }).map((_, index) => (
+              <span
+                key={index}
+                className="flex-1 rounded-full bg-gradient-to-t from-[#d4af37]/10 via-[#d4af37]/40 to-[#d4af37]/80 animate-pulse"
+                style={{
+                  height: `${40 + Math.sin(index) * 25 + (index % 2 === 0 ? 30 : 10)}%`,
+                  animationDelay: `${index * 0.1}s`,
+                }}
+                aria-hidden
+              />
+            ))}
+          </div>
         </div>
 
         {/* Floating decorative elements */}
