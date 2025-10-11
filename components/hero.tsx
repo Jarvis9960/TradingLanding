@@ -1,10 +1,8 @@
 "use client"
 
-import { useEffect, useRef, Suspense } from "react"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, ArrowUpRight } from "lucide-react"
+import { Suspense, useEffect, useRef } from "react"
 import dynamic from "next/dynamic"
-import { ArrowRight, ArrowUpRight, Play } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
@@ -63,24 +61,6 @@ export default function Hero() {
     return () => observer.disconnect()
   }, [])
 
-  const metrics = [
-    {
-      value: "99.7%",
-      label: "Signal Accuracy",
-      description: "Validated across live and historical data",
-    },
-    {
-      value: "50ms",
-      label: "Execution Speed",
-      description: "Lightning-fast, emotionless order flow",
-    },
-    {
-      value: "24/7",
-      label: "Active Monitoring",
-      description: "Always on, always watching the markets",
-    },
-  ]
-
   return (
     <section
       ref={sectionRef}
@@ -137,26 +117,32 @@ export default function Hero() {
             </p>
           </div>
 
-      <div className="relative z-10 text-center max-w-5xl mx-auto">
-        <div className="animate-blur-to-sharp space-y-4" style={{ animationDelay: "0.2s", opacity: 0 }}>
-          <p className="text-base md:text-lg uppercase tracking-[0.4em] text-gray-400 flex items-center justify-center gap-2">
-            <span className="h-px w-10 bg-[#d4af37]/40 hidden md:block" aria-hidden />
-            Built by traders
-            <ArrowUpRight className="w-5 h-5 text-[#d4af37]" aria-hidden />
-            for traders
-            <span className="h-px w-10 bg-[#d4af37]/40 hidden md:block" aria-hidden />
-          </p>
-          <h1 className="font-[family-name:var(--font-playfair)] text-5xl md:text-7xl lg:text-8xl font-bold leading-tight">
-            <span className="bg-gradient-to-r from-white via-[#d4af37] to-white bg-clip-text text-transparent">
-              Quantitative. Relentless. Real.
-            </span>
-          </h1>
-        </div>
+          <div className="grid gap-6 pt-10 md:grid-cols-3">
+            {metrics.map((metric) => (
+              <div
+                key={metric.label}
+                className="rounded-2xl border border-white/5 bg-white/5 p-6 text-left backdrop-blur-sm transition-all duration-300 hover:border-[#d4af37]/60"
+              >
+                <div className="mb-2 text-4xl font-bold text-white md:text-5xl">{metric.value}</div>
+                <div className="mb-2 text-sm uppercase tracking-[0.3em] text-[#d4af37]">{metric.label}</div>
+                <p className="text-sm text-gray-400">{metric.description}</p>
+              </div>
+            ))}
+          </div>
 
-        <div className="animate-fade-in-up mb-12" style={{ animationDelay: "0.6s", opacity: 0 }}>
-          <p className="text-xl md:text-3xl text-gray-300 font-light tracking-wide">
-            {"India's first quantitative forex hedge."}
-          </p>
+          <div className="flex items-end gap-2 pt-6 opacity-70">
+            {Array.from({ length: 12 }).map((_, index) => (
+              <span
+                key={index}
+                className="flex-1 rounded-full bg-gradient-to-t from-[#d4af37]/10 via-[#d4af37]/40 to-[#d4af37]/80"
+                style={{
+                  height: `${40 + Math.sin(index) * 25 + (index % 2 === 0 ? 30 : 10)}%`,
+                  animationDelay: `${index * 0.1}s`,
+                }}
+                aria-hidden
+              />
+            ))}
+          </div>
         </div>
 
         <div className="relative flex items-center justify-center">
@@ -199,48 +185,10 @@ export default function Hero() {
         </div>
       </div>
 
-        <div className="mt-16 animate-fade-in-up" style={{ animationDelay: "1.3s", opacity: 0 }}>
-          <div className="grid gap-6 md:grid-cols-3">
-            {metrics.map((metric) => (
-              <div
-                key={metric.label}
-                className="glass rounded-2xl p-6 text-left backdrop-blur-sm border border-white/5 hover:border-[#d4af37]/60 transition-all duration-300"
-              >
-                <div className="text-4xl md:text-5xl font-bold text-white mb-2">
-                  {metric.value}
-                </div>
-                <div className="text-sm uppercase tracking-[0.3em] text-[#d4af37] mb-2">{metric.label}</div>
-                <p className="text-sm text-gray-400">{metric.description}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-10 flex items-end gap-2 h-32 opacity-70">
-            {Array.from({ length: 12 }).map((_, index) => (
-              <span
-                key={index}
-                className="flex-1 rounded-full bg-gradient-to-t from-[#d4af37]/10 via-[#d4af37]/40 to-[#d4af37]/80 animate-pulse"
-                style={{
-                  height: `${40 + Math.sin(index) * 25 + (index % 2 === 0 ? 30 : 10)}%`,
-                  animationDelay: `${index * 0.1}s`,
-                }}
-                aria-hidden
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Floating decorative elements */}
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-[#d4af37] rounded-full animate-float" />
-        <div
-          className="absolute top-1/3 right-1/4 w-3 h-3 bg-white rounded-full animate-float"
-          style={{ animationDelay: "1s" }}
-        />
-        <div
-          className="absolute bottom-1/4 left-1/3 w-2 h-2 bg-[#d4af37] rounded-full animate-float"
-          style={{ animationDelay: "2s" }}
-        />
-      </div>
+      {/* Floating decorative elements */}
+      <div className="absolute left-1/4 top-1/4 h-2 w-2 rounded-full bg-[#d4af37] animate-float" />
+      <div className="absolute right-1/4 top-1/3 h-3 w-3 rounded-full bg-white animate-float" style={{ animationDelay: "1s" }} />
+      <div className="absolute bottom-1/4 left-1/3 h-2 w-2 rounded-full bg-[#d4af37] animate-float" style={{ animationDelay: "2s" }} />
     </section>
   )
 }
