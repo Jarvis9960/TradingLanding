@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useState, useMemo } from "react"
+import { motion, useReducedMotion } from "framer-motion"
 import { BarChart3, Zap, Shield, Globe } from "lucide-react"
 
 const differentiators = [
@@ -27,48 +28,99 @@ const differentiators = [
 ]
 
 export default function DifferentiatorsSection() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([])
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const shouldReduceMotion = useReducedMotion()
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-fade-in-up")
-          }
-        })
+  const sectionVariants = useMemo(
+    () => ({
+      hidden: { opacity: 0, y: 40 },
+      visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+          duration: shouldReduceMotion ? 0 : 0.9,
+          ease: "easeInOut",
+        },
       },
-      { threshold: 0.2 },
-    )
+    }),
+    [shouldReduceMotion],
+  )
 
-    cardsRef.current.forEach((card) => {
-      if (card) observer.observe(card)
-    })
+  const gridVariants = useMemo(
+    () => ({
+      hidden: {},
+      visible: {
+        transition: {
+          staggerChildren: shouldReduceMotion ? 0 : 0.12,
+          delayChildren: shouldReduceMotion ? 0 : 0.1,
+        },
+      },
+    }),
+    [shouldReduceMotion],
+  )
 
-    return () => observer.disconnect()
-  }, [])
+  const cardVariants = useMemo(
+    () => ({
+      hidden: { opacity: 0, y: 30, scale: 0.96, filter: "blur(8px)" },
+      visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        transition: {
+          duration: shouldReduceMotion ? 0 : 0.8,
+          ease: "easeInOut",
+        },
+      },
+    }),
+    [shouldReduceMotion],
+  )
 
   return (
-    <section ref={sectionRef} className="relative py-32 px-4 md:px-8 bg-gradient-to-b from-black to-[#0a0a0a]">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl font-bold mb-20 text-center">
-          Why We're <span className="text-[#d4af37]">Different</span>
-        </h2>
+    <motion.section
+      initial={shouldReduceMotion ? "visible" : "hidden"}
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.35 }}
+      variants={sectionVariants}
+      className="relative py-32 px-4 md:px-8 bg-gradient-to-b from-black to-[#0a0a0a] overflow-hidden"
+    >
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute -top-32 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-gradient-to-br from-[#d4af37]/20 via-[#d4af37]/5 to-transparent"
+        animate=
+          {shouldReduceMotion
+            ? undefined
+            : {
+                scale: [1, 1.08, 1],
+                filter: ["blur(20px)", "blur(30px)", "blur(20px)"],
+                opacity: [0.35, 0.55, 0.35],
+              }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto relative">
+        <motion.h2
+          className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl font-bold mb-20 text-center"
+          variants={sectionVariants}
+        >
+          Why We're <span className="text-[#d4af37]">Different</span>
+        </motion.h2>
+
+        <motion.div
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+          initial={shouldReduceMotion ? "visible" : "hidden"}
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={gridVariants}
+        >
           {differentiators.map((item, index) => {
             const Icon = item.icon
             return (
-              <div
+              <motion.div
                 key={index}
-                ref={(el) => {
-                  cardsRef.current[index] = el
-                }}
-                className="opacity-0 glass rounded-2xl p-8 transition-all duration-500 group cursor-pointer relative overflow-hidden"
+                variants={cardVariants}
+                className="glass rounded-2xl p-8 transition-all duration-500 group cursor-pointer relative overflow-hidden"
                 style={{
-                  animationDelay: `${index * 0.15}s`,
                   transform: hoveredIndex === index ? "translateY(-12px) scale(1.05)" : "translateY(0) scale(1)",
                   boxShadow:
                     hoveredIndex === index
@@ -135,11 +187,11 @@ export default function DifferentiatorsSection() {
                     />
                   </>
                 )}
-              </div>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   )
 }

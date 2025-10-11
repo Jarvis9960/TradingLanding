@@ -1,37 +1,98 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useMemo } from "react"
+import { motion, useReducedMotion } from "framer-motion"
 import DataVisualization from "./data-visualization"
 
 export default function IntelligenceSection() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const textRef = useRef<HTMLDivElement>(null)
-  const vizRef = useRef<HTMLDivElement>(null)
+  const shouldReduceMotion = useReducedMotion()
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-fade-in-up")
-          }
-        })
+  const sectionVariants = useMemo(
+    () => ({
+      hidden: { opacity: 0, y: 50 },
+      visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+          duration: shouldReduceMotion ? 0 : 0.9,
+          ease: "easeInOut",
+        },
       },
-      { threshold: 0.2 },
-    )
+    }),
+    [shouldReduceMotion],
+  )
 
-    if (textRef.current) observer.observe(textRef.current)
-    if (vizRef.current) observer.observe(vizRef.current)
+  const contentVariants = useMemo(
+    () => ({
+      hidden: { opacity: 0, y: 40, filter: "blur(10px)" },
+      visible: {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        transition: {
+          duration: shouldReduceMotion ? 0 : 0.8,
+          ease: "easeInOut",
+        },
+      },
+    }),
+    [shouldReduceMotion],
+  )
 
-    return () => observer.disconnect()
-  }, [])
+  const vizVariants = useMemo(
+    () => ({
+      hidden: { opacity: 0, y: 60, scale: 0.92, filter: "blur(12px)" },
+      visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        transition: {
+          duration: shouldReduceMotion ? 0 : 1,
+          ease: "easeInOut",
+          delay: shouldReduceMotion ? 0 : 0.1,
+        },
+      },
+    }),
+    [shouldReduceMotion],
+  )
 
   return (
-    <section ref={sectionRef} className="relative py-32 px-4 md:px-8">
-      <div className="max-w-7xl mx-auto">
+    <motion.section
+      initial={shouldReduceMotion ? "visible" : "hidden"}
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.35 }}
+      variants={sectionVariants}
+      className="relative py-32 px-4 md:px-8 overflow-hidden"
+    >
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 right-16 h-80 w-80 rounded-full bg-[#d4af37]/15 blur-[140px]"
+        animate=
+          {shouldReduceMotion
+            ? undefined
+            : {
+                y: [0, 50, 0],
+                scale: [0.9, 1.05, 0.9],
+              }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 left-10 h-72 w-72 rounded-full bg-[#d4af37]/10 blur-[120px]"
+        animate=
+          {shouldReduceMotion
+            ? undefined
+            : {
+                y: [0, -40, 0],
+                x: [0, 30, 0],
+              }}
+        transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      <div className="max-w-7xl mx-auto relative">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           {/* Text content */}
-          <div ref={textRef} className="opacity-0">
+          <motion.div variants={contentVariants} className="space-y-6">
             <h2 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl font-bold mb-8 leading-tight">
               Where Intelligence
               <br />
@@ -45,17 +106,17 @@ export default function IntelligenceSection() {
               Our proprietary systems analyze millions of data points in real-time, identifying opportunities invisible
               to the human eye.
             </p>
-          </div>
+          </motion.div>
 
           {/* Animated visualization */}
-          <div ref={vizRef} className="opacity-0" style={{ animationDelay: "0.3s" }}>
+          <motion.div variants={vizVariants}>
             <DataVisualization />
-          </div>
+          </motion.div>
         </div>
       </div>
 
       {/* Decorative divider */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-30" />
-    </section>
+    </motion.section>
   )
 }
