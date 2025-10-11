@@ -77,18 +77,21 @@ export default function DifferentiatorsSection() {
   )
 
   return (
-    <section ref={sectionRef} className="relative z-10 py-32 px-4 md:px-8 bg-gradient-to-b from-black to-[#0a0a0a]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/70 to-transparent" aria-hidden />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/70 to-transparent opacity-40" aria-hidden />
-      <div className="max-w-7xl mx-auto">
-        <h2 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl font-bold mb-20 text-center">
     <motion.section
       initial={shouldReduceMotion ? "visible" : "hidden"}
       whileInView="visible"
       viewport={{ once: true, amount: 0.35 }}
       variants={sectionVariants}
-      className="relative py-32 px-4 md:px-8 bg-gradient-to-b from-black to-[#0a0a0a] overflow-hidden"
+      className="relative z-10 py-32 px-4 md:px-8 bg-gradient-to-b from-black to-[#0a0a0a] overflow-hidden"
     >
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/70 to-transparent"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#d4af37]/70 to-transparent opacity-40"
+        aria-hidden
+      />
       <motion.div
         aria-hidden
         className="pointer-events-none absolute -top-32 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-gradient-to-br from-[#d4af37]/20 via-[#d4af37]/5 to-transparent"
