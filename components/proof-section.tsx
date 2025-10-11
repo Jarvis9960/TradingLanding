@@ -88,6 +88,9 @@ export default function ProofSection() {
   )
 
   return (
+    <section ref={sectionRef} className="relative z-10 overflow-hidden py-32 px-4 md:px-8 bg-[#050505]">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black via-black/70 to-transparent" aria-hidden />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(212,175,55,0.12),_transparent_60%)]" aria-hidden />
     <motion.section
       initial={shouldReduceMotion ? "visible" : "hidden"}
       whileInView="visible"
@@ -210,6 +213,9 @@ export default function ProofSection() {
           </motion.div>
         </div>
       </div>
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black via-black/70 to-transparent" aria-hidden />
+    </section>
     </motion.section>
   )
 }

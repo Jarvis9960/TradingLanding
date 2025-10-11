@@ -57,6 +57,10 @@ export default function IntelligenceSection() {
   )
 
   return (
+    <section ref={sectionRef} className="relative z-10 overflow-hidden py-32 px-4 md:px-8">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-black/80 to-[#050505]" aria-hidden />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black via-black/70 to-transparent" aria-hidden />
+      <div className="max-w-7xl mx-auto">
     <motion.section
       initial={shouldReduceMotion ? "visible" : "hidden"}
       whileInView="visible"
@@ -116,6 +120,8 @@ export default function IntelligenceSection() {
       </div>
 
       {/* Decorative divider */}
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-30" />
+    </section>
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-30" />
     </motion.section>
   )
