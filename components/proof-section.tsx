@@ -88,16 +88,21 @@ export default function ProofSection() {
   )
 
   return (
-    <section ref={sectionRef} className="relative z-10 overflow-hidden py-32 px-4 md:px-8 bg-[#050505]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black via-black/70 to-transparent" aria-hidden />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(212,175,55,0.12),_transparent_60%)]" aria-hidden />
     <motion.section
       initial={shouldReduceMotion ? "visible" : "hidden"}
       whileInView="visible"
       viewport={{ once: true, amount: 0.35 }}
       variants={containerVariants}
-      className="relative py-32 px-4 md:px-8 bg-[#050505] overflow-hidden"
+      className="relative z-10 overflow-hidden py-32 px-4 md:px-8 bg-[#050505]"
     >
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black via-black/70 to-transparent"
+        aria-hidden
+      />
+      <div
+        className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(212,175,55,0.12),_transparent_60%)]"
+        aria-hidden
+      />
       <motion.div
         aria-hidden
         className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(212,175,55,0.12),_transparent_65%)]"
@@ -156,7 +161,7 @@ export default function ProofSection() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
           >
-            {payouts.map((payout) => (
+            {payouts.map((payout, payoutIndex) => (
               <motion.div
                 key={payout.title}
                 variants={cardVariants}
@@ -180,7 +185,7 @@ export default function ProofSection() {
                       <span
                         key={barIndex}
                         className="flex-1 rounded-full bg-gradient-to-t from-[#d4af37]/10 via-[#d4af37]/40 to-[#d4af37]/80"
-                        style={{ height: `${45 + (barIndex % 5) * 8 + index * 5}%` }}
+                        style={{ height: `${45 + (barIndex % 5) * 8 + payoutIndex * 5}%` }}
                         aria-hidden
                       />
                     ))}
@@ -214,8 +219,10 @@ export default function ProofSection() {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black via-black/70 to-transparent" aria-hidden />
-    </section>
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black via-black/70 to-transparent"
+        aria-hidden
+      />
     </motion.section>
   )
 }
