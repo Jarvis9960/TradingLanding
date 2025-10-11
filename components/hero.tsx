@@ -64,7 +64,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex min-h-screen flex-col justify-between overflow-hidden bg-[#020203] px-4 pb-16 pt-8 text-white opacity-0"
+      className="relative z-10 flex min-h-screen flex-col justify-between overflow-hidden bg-[#020203] px-4 pb-16 pt-8 text-white opacity-0"
     >
       {/* background gradients */}
       <div className="pointer-events-none absolute inset-0">
@@ -73,6 +73,8 @@ export default function Hero() {
         <div className="absolute -right-20 bottom-0 h-72 w-72 rounded-full bg-[#9674ff]/10 blur-3xl" />
         <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(5,5,5,0.9),_rgba(8,8,8,0.4))]" />
       </div>
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent via-black/60 to-black" />
 
       {/* nav */}
       <div className="relative z-20 mx-auto flex w-full max-w-6xl items-center justify-between rounded-full border border-white/5 bg-white/5 px-4 py-2 backdrop-blur">

@@ -50,7 +50,7 @@ export default function LuxurySection() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative py-32 px-4 md:px-8 overflow-hidden">
+    <section ref={sectionRef} className="relative z-10 overflow-hidden py-32 px-4 md:px-8">
       <div className="absolute inset-0 bg-gradient-to-br from-black via-[#0a0a0a] to-black">
         <div className="absolute inset-0 opacity-30">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#d4af37] rounded-full blur-[120px] animate-pulse" />
@@ -60,6 +60,7 @@ export default function LuxurySection() {
           />
         </div>
       </div>
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/70 to-transparent" aria-hidden />
 
       <div className="relative max-w-7xl mx-auto">
         <div className="text-center mb-20">
