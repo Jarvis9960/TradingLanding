@@ -11,7 +11,7 @@ const payouts = [
     amount: "₹4.8L",
     cadence: "Weekly cycle",
     desk: "Adaptive London Breakout",
-    delta: "+9.4% NAV",
+    delta: "+51.7% NAV",
     context: "Staggered volatility filters routing flow across the GBP basket.",
   },
   {
@@ -19,7 +19,7 @@ const payouts = [
     amount: "₹6.1L",
     cadence: "Fortnight release",
     desk: "Mean Reversion Stack",
-    delta: "+11.2% NAV",
+    delta: "+61.2% NAV",
     context: "CME micro futures hedges wrapping high conviction momentum legs.",
   },
   {
@@ -27,7 +27,7 @@ const payouts = [
     amount: "₹3.6L",
     cadence: "Weekly cycle",
     desk: "Asia Session Arbitrage",
-    delta: "+7.8% NAV",
+    delta: "+57.8% NAV",
     context: "Latency arbitrage on INR crosses with adaptive liquidity splits.",
   },
   {
@@ -35,7 +35,7 @@ const payouts = [
     amount: "₹7.4L",
     cadence: "Monthly settlement",
     desk: "Event Driven Macro",
-    delta: "+13.5% NAV",
+    delta: "+53.5% NAV",
     context: "Catalyst plays wrapped in delta neutral hedging overlays.",
   },
   {
@@ -43,7 +43,7 @@ const payouts = [
     amount: "₹5.2L",
     cadence: "Weekly cycle",
     desk: "Quant Momentum Mesh",
-    delta: "+8.9% NAV",
+    delta: "+58.9% NAV",
     context: "Signal mesh blending order flow momentum with volume profiling.",
   },
 ]
