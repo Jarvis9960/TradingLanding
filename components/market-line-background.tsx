@@ -34,21 +34,32 @@ export default function MarketLineBackground() {
     let animationFrame = 0
     const points: number[] = []
     const config = {
-      pointCount: 180,
-      minStep: -0.22,
-      maxStep: 0.28,
+      pointCount: 420,
       baselineRatio: 0.52,
       amplitudeRatio: 0.22,
-      velocityDecay: 0.972,
-      maxVelocity: 0.12,
-      noiseStrength: 0.06,
-      reversionStrength: 0.38,
-      updateInterval: 520,
-      headSpeedDivisor: 260,
+      updateInterval: 70,
+      headSpeedDivisor: 90,
+      patternBounds: [
+        [0.42, 0.58],
+        [-0.3, -0.08],
+        [0.22, 0.36],
+        [-0.64, -0.42],
+        [0.14, 0.3],
+        [-0.34, -0.14],
+      ] as const,
     }
-    let velocity = 0
+
+    const pickWithinBounds = (range: readonly [number, number]) => range[0] + Math.random() * (range[1] - range[0])
+
     let lastUpdate = 0
-    let cyclePhase = 0
+    let segmentIndex = 0
+    const segment = {
+      start: 0,
+      startNormalized: 0,
+      targetNormalized: pickWithinBounds(config.patternBounds[0]),
+      duration: 1100,
+      elapsed: 0,
+    }
 
     const resize = () => {
       const { width, height } = canvas.getBoundingClientRect()
@@ -59,17 +70,54 @@ export default function MarketLineBackground() {
       ctx.scale(dpr, dpr)
     }
 
+    const resetSegment = (baseline: number, amplitude: number) => {
+      segmentIndex = 0
+      segment.start = baseline
+      segment.startNormalized = 0
+      segment.targetNormalized = pickWithinBounds(config.patternBounds[0])
+      segment.duration = 2600
+      segment.elapsed = 0
+    }
+
+    const computeNextValue = (baseline: number, amplitude: number, dt: number) => {
+      if (segment.elapsed === 0 && points.length > 0) {
+        segment.start = points[points.length - 1]
+        segment.startNormalized = clamp((segment.start - baseline) / (amplitude || 1), -0.7, 0.7)
+      }
+
+      segment.elapsed += dt
+      const target = baseline + amplitude * segment.targetNormalized
+      const startValue = segment.start
+      const progress = clamp(segment.elapsed / segment.duration, 0, 1)
+      const eased = 1 - Math.pow(1 - progress, 2)
+      let value = startValue + (target - startValue) * eased
+      value += (Math.random() - 0.5) * amplitude * 0.009
+      value = clamp(value, baseline - amplitude * 0.72, baseline + amplitude * 0.72)
+
+      if (progress >= 1) {
+        segment.start = value
+        segment.startNormalized = clamp((segment.start - baseline) / (amplitude || 1), -0.7, 0.7)
+        segmentIndex = (segmentIndex + 1) % config.patternBounds.length
+        const range = config.patternBounds[segmentIndex]
+        const nextNormalized = pickWithinBounds(range)
+        segment.targetNormalized = clamp(nextNormalized, -0.68, 0.68)
+        segment.duration = 750 + Math.random() * 1100
+        segment.elapsed = 0
+      }
+
+      return value
+    }
+
     const initPoints = () => {
       points.length = 0
       const { height } = canvas.getBoundingClientRect()
       const baseline = height * config.baselineRatio
       const amplitude = height * config.amplitudeRatio
+      resetSegment(baseline, amplitude)
 
-      let current = baseline
       for (let i = 0; i < config.pointCount; i++) {
-        current += (Math.random() - 0.5) * amplitude * 0.12
-        current = clamp(current, baseline - amplitude, baseline + amplitude)
-        points.push(current)
+        const value = computeNextValue(baseline, amplitude, config.updateInterval)
+        points.push(value)
       }
     }
 
@@ -77,38 +125,12 @@ export default function MarketLineBackground() {
       const { height } = canvas.getBoundingClientRect()
       const baseline = height * config.baselineRatio
       const amplitude = height * config.amplitudeRatio
-      const trendBias = Math.sin(time / 6800) * 0.015
-      const last = points[points.length - 1] ?? baseline
+      const dt = lastUpdate ? Math.min(time - lastUpdate, config.updateInterval * 1.5) : config.updateInterval
 
-      const noise = (Math.random() - 0.5) * config.noiseStrength
-      const deviation = (baseline - last) / (amplitude || 1)
-      const reversion = deviation * config.reversionStrength
-
-      const cycle = cyclePhase % 4
-      let directionalBias = 0
-      if (cycle === 0) {
-        directionalBias = 0.06
-      } else if (cycle === 1) {
-        directionalBias = -0.04
-      } else if (cycle === 2) {
-        directionalBias = 0.02
-      } else {
-        directionalBias = -0.05
-      }
-      cyclePhase += 1
-
-      velocity = velocity * config.velocityDecay + noise + trendBias + reversion + directionalBias * 0.045
-      if (Math.abs(velocity) < 0.004) {
-        velocity += Math.random() > 0.5 ? 0.005 : -0.005
-      }
-      velocity = clamp(velocity, -config.maxVelocity, config.maxVelocity)
-
-      let nextValue = last + velocity * amplitude
-      const maxDeviation = amplitude * 0.75
-      nextValue = clamp(nextValue, baseline - maxDeviation, baseline + maxDeviation)
-
+      const nextValue = computeNextValue(baseline, amplitude, dt)
       points.push(nextValue)
       points.shift()
+      lastUpdate = time
     }
 
     const drawGrid = (width: number, height: number, time: number) => {
@@ -299,10 +321,12 @@ export default function MarketLineBackground() {
     const handleResize = () => {
       resize()
       initPoints()
+      lastUpdate = performance.now()
     }
 
     resize()
     initPoints()
+    lastUpdate = performance.now()
     animationFrame = requestAnimationFrame(render)
 
     let resizeObserver: ResizeObserver | null = null
