@@ -134,9 +134,9 @@ export default function Hero() {
           <span className="block font-[family-name:var(--font-playfair)]">
             Built by traders
           </span>
-          <span className="mt-6 flex flex-col items-center justify-center gap-6 sm:flex-row">
-            <span className="relative inline-flex h-20 w-20 items-center justify-center rounded-[26px] border border-[#f6d47d]/60 bg-[#f6d47d] text-[#160d02] shadow-[0_22px_65px_rgba(246,212,125,0.38)] sm:h-24 sm:w-24">
-              <ArrowRight className="h-12 w-12" strokeWidth={3.2} />
+          <span className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+            <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-[22px] border border-[#f6d47d]/60 bg-[#f6d47d] text-[#160d02] shadow-[0_22px_65px_rgba(246,212,125,0.38)] sm:h-24 sm:w-24">
+              <ArrowRight className="h-9 w-9 sm:h-12 sm:w-12" strokeWidth={3.2} />
             </span>
             <span className="font-[family-name:var(--font-playfair)] text-4xl font-semibold leading-tight sm:text-6xl lg:text-7xl">
               for traders.
