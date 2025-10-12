@@ -4,6 +4,14 @@ import { useMemo } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import DataVisualization from "./data-visualization"
 
+type IntelCard = {
+  value: string
+  label: string
+  description: string
+  accent: string
+  gradient: string
+}
+
 export default function IntelligenceSection() {
   const shouldReduceMotion = useReducedMotion()
 
@@ -70,6 +78,30 @@ export default function IntelligenceSection() {
         x: [0, 30, 0],
       }
 
+  const intelCards: IntelCard[] = [
+    {
+      value: "99.7%",
+      label: "Signal Accuracy",
+      description: "Proven live + historical execution edge.",
+      accent: "#f6d47d",
+      gradient: "from-[#f6d47d]/35 via-transparent to-transparent",
+    },
+    {
+      value: "50ms",
+      label: "Execution Speed",
+      description: "Colocation + automation, human-proofed.",
+      accent: "#ffd166",
+      gradient: "from-[#ffd166]/30 via-transparent to-transparent",
+    },
+    {
+      value: "24/7",
+      label: "Capital Watch",
+      description: "Sentinel desk monitoring every session.",
+      accent: "#60efff",
+      gradient: "from-[#60efff]/30 via-transparent to-transparent",
+    },
+  ]
+
   return (
     <motion.section
       initial={shouldReduceMotion ? "visible" : "hidden"}
@@ -102,20 +134,33 @@ export default function IntelligenceSection() {
 
       <div className="relative mx-auto max-w-7xl">
         <div className="grid items-center gap-16 md:grid-cols-2">
-          <motion.div variants={contentVariants} className="space-y-6">
-            <h2 className="font-[family-name:var(--font-playfair)] text-5xl font-bold leading-tight md:text-6xl">
-              Where Intelligence
-              <br />
-              <span className="text-[#d4af37]">Meets Opportunity</span>
-            </h2>
-            <p className="text-lg leading-relaxed text-gray-400 md:text-xl">
-              Harness the power of quantitative analysis and algorithmic precision to navigate the forex markets with
-              unparalleled confidence.
-            </p>
-            <p className="text-lg leading-relaxed text-gray-400 md:text-xl">
-              Our proprietary systems analyze millions of data points in real-time, identifying opportunities invisible
-              to the human eye.
-            </p>
+          <motion.div variants={contentVariants} className="space-y-10">
+            <div className="flex flex-wrap items-center gap-4">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.45em] text-white/60">
+                Intelligence Stack
+              </span>
+              <span className="text-sm text-white/40">Signal · Liquidity · Risk</span>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {intelCards.map((card) => (
+                <motion.div
+                  key={card.label}
+                  className="group relative overflow-hidden rounded-[28px] border border-white/8 bg-gradient-to-br from-black/75 via-black/60 to-black/35 p-6 shadow-[0_18px_80px_rgba(3,3,12,0.55)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 hover:border-white/16 hover:shadow-[0_28px_90px_rgba(6,6,18,0.65)]"
+                  whileHover={shouldReduceMotion ? undefined : { y: -4 }}
+                >
+                  <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${card.gradient}`} aria-hidden />
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-70" />
+
+                  <div className="relative space-y-4">
+                    <span className="block text-4xl font-semibold text-white md:text-5xl">{card.value}</span>
+                    <span className="inline-block text-xs font-semibold uppercase tracking-[0.35em]" style={{ color: card.accent }}>
+                      {card.label.toUpperCase()}
+                    </span>
+                    <p className="text-sm text-white/60">{card.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
 
           <motion.div variants={vizVariants}>

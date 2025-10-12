@@ -1,37 +1,11 @@
 "use client"
 
-import { Suspense, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import dynamic from "next/dynamic"
-import { ArrowUpRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-
-const CandleChart3D = dynamic(() => import("@/components/candle-chart-3d"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="text-[#f6d47d]">Loading visual...</div>
-    </div>
-  ),
-})
-
-const metrics = [
-  {
-    value: "99.7%",
-    label: "Signal Accuracy",
-    description: "Proven live + historical execution edge",
-  },
-  {
-    value: "50ms",
-    label: "Execution Speed",
-    description: "Colocation + automation, human-proofed",
-  },
-  {
-    value: "24/7",
-    label: "Capital Watch",
-    description: "Sentinel desk monitoring every session",
-  },
-]
 
 const highlights = [
   { title: "Top tier liquidity venues", accent: "Seven figure routed volume" },
@@ -39,8 +13,14 @@ const highlights = [
   { title: "Elite trader community", accent: "Invite-only mastermind" },
 ]
 
+const MarketPulseBackground = dynamic(() => import("@/components/market-line-background"), {
+  ssr: false,
+  loading: () => <div className="flex h-full w-full items-center justify-center text-sm text-white/60">Plotting market pulse…</div>,
+})
+
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
+  const sceneRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -61,22 +41,64 @@ export default function Hero() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const progress = Math.min(window.scrollY / window.innerHeight, 1)
+      if (sceneRef.current) {
+        sceneRef.current.style.transform = `translate3d(0, ${progress * -140}px, 0) scale(${1 + progress * 0.25})`
+        sceneRef.current.style.opacity = String(1 - progress * 0.5)
+      }
+    }
+
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   return (
     <section
       ref={sectionRef}
-      className="relative z-10 flex min-h-screen flex-col justify-between overflow-hidden bg-[#020203] px-4 pb-16 pt-8 text-white opacity-0"
+      className="relative z-10 flex min-h-screen flex-col items-center overflow-hidden bg-[#020203] px-4 pb-20 pt-12 text-white opacity-0"
     >
-      {/* background gradients */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(246,212,125,0.18),_transparent_65%)]" />
-        <div className="absolute -left-32 top-1/3 h-64 w-64 rounded-full bg-[#f1c876]/20 blur-3xl" />
-        <div className="absolute -right-20 bottom-0 h-72 w-72 rounded-full bg-[#9674ff]/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(5,5,5,0.9),_rgba(8,8,8,0.4))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(246,212,125,0.12),_transparent_65%)]" />
+        <div className="absolute -left-24 top-1/3 h-64 w-64 rounded-full bg-[#f1c876]/15 blur-3xl" />
+        <div className="absolute right-[-6rem] bottom-10 h-72 w-72 rounded-full bg-[#9674ff]/12 blur-3xl" />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(5,5,9,0.9),_rgba(8,8,14,0.55))]" />
+      </div>
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute left-1/2 top-1/2 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[conic-gradient(from_180deg_at_50%_50%,rgba(246,212,125,0.18)_0deg,rgba(150,116,255,0.24)_140deg,rgba(23,15,3,0.4)_260deg,rgba(246,212,125,0.18)_360deg)] opacity-90 blur-[120px] mix-blend-screen" />
+        <div className="absolute left-[10%] top-[22%] h-60 w-60 -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_rgba(246,212,125,0.35)_0%,_rgba(26,18,2,0)_70%)] opacity-70 blur-[40px]" />
+        <div className="absolute right-[12%] top-[32%] h-72 w-72 translate-x-1/2 rounded-full bg-[radial-gradient(circle,_rgba(150,116,255,0.28)_0%,_rgba(15,12,40,0)_75%)] opacity-70 blur-[50px]" />
+        <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-[radial-gradient(circle,_rgba(150,116,255,0.35)_0%,_rgba(30,23,3,0.3)_55%,_transparent_80%)] blur-3xl" />
+
+        <div className="absolute inset-[-18%]">
+          <div
+            ref={sceneRef}
+            className="pointer-events-none absolute inset-0 min-h-[130vh] will-change-transform"
+          >
+            <div className="absolute inset-0 opacity-85">
+              <MarketPulseBackground />
+            </div>
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(8,4,20,0.2),_rgba(2,2,4,0.85))]" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#020203] via-[#020203]/90 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-[#020203]/80 via-transparent to-transparent" />
+          </div>
+        </div>
+
+        <div className="absolute left-1/2 top-1/2 h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute inset-0 animate-[spin_28s_linear_infinite] rounded-full border border-white/20 bg-[radial-gradient(circle,_rgba(255,255,255,0.08)_0%,_rgba(246,212,125,0.25)_35%,_rgba(19,14,4,0)_72%)] opacity-60 blur-[70px] mix-blend-screen" />
+          <div className="absolute inset-10 animate-[spin_32s_linear_infinite_reverse] rounded-full bg-[conic-gradient(from_120deg_at_50%_50%,rgba(246,212,125,0)_0deg,rgba(246,212,125,0.36)_120deg,rgba(38,24,8,0)_260deg)] opacity-70 blur-[90px] mix-blend-screen" />
+        </div>
+
+        <div className="absolute left-[18%] bottom-[18%] h-4 w-4 rounded-full bg-[#f6d47d]/80 shadow-[0_0_40px_12px_rgba(246,212,125,0.4)] animate-[ping_5s_linear_infinite]" />
+        <div className="absolute right-[20%] top-[48%] h-3 w-3 rounded-full bg-white/80 shadow-[0_0_35px_14px_rgba(162,140,255,0.35)] animate-[ping_7s_linear_infinite]" />
+        <div
+          className="absolute left-[36%] top-[62%] h-2.5 w-2.5 rounded-full bg-[#b6a0ff]/70 shadow-[0_0_28px_8px_rgba(150,116,255,0.35)] animate-[ping_6s_linear_infinite]"
+          style={{ animationDelay: "1.2s" }}
+        />
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent via-black/60 to-black" />
-
-      {/* nav */}
       <div className="relative z-20 mx-auto flex w-full max-w-6xl items-center justify-between rounded-full border border-white/5 bg-white/5 px-4 py-2 backdrop-blur">
         <div className="flex items-center gap-3">
           <span className="h-10 w-10 rounded-full border border-white/10 bg-black/60" aria-hidden />
@@ -103,94 +125,44 @@ export default function Hero() {
         </a>
       </div>
 
-      <div className="relative z-20 mx-auto grid w-full max-w-6xl flex-1 gap-12 pb-6 pt-12 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="flex flex-col justify-center gap-10">
-          <div className="space-y-6">
-            <span className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs uppercase tracking-[0.45em] text-white/70">
-              Built by traders <ArrowUpRight className="h-4 w-4 text-[#f6d47d]" aria-hidden /> for traders
+      <div className="relative z-20 flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-10 pt-16 text-center">
+        <span className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs uppercase tracking-[0.45em] text-white/70">
+          Tradingwala // Quant Desk
+        </span>
+
+        <h1 className="text-4xl font-semibold leading-tight sm:text-6xl lg:text-7xl">
+          <span className="block font-[family-name:var(--font-playfair)]">
+            Built by traders
+          </span>
+          <span className="mt-6 flex flex-col items-center justify-center gap-6 sm:flex-row">
+            <span className="relative inline-flex h-20 w-20 items-center justify-center rounded-[26px] border border-[#f6d47d]/60 bg-[#f6d47d] text-[#160d02] shadow-[0_22px_65px_rgba(246,212,125,0.38)] sm:h-24 sm:w-24">
+              <ArrowRight className="h-12 w-12" strokeWidth={3.2} />
             </span>
-            <h1 className="font-[family-name:var(--font-playfair)] text-4xl leading-tight sm:text-6xl lg:text-7xl">
-              <span className="bg-gradient-to-br from-white via-[#f9dca1] to-white bg-clip-text text-transparent">
-                Quantitative. Relentless. Real.
-              </span>
-            </h1>
-            <p className="max-w-xl text-lg text-white/70 sm:text-xl">
-              India&apos;s first quantitative forex hedge blending institutional-grade execution, precision risk, and a private circle of funded traders scaling together.
-            </p>
-          </div>
+            <span className="font-[family-name:var(--font-playfair)] text-4xl font-semibold leading-tight sm:text-6xl lg:text-7xl">
+              for traders.
+            </span>
+          </span>
+        </h1>
 
-          <div className="grid gap-6 pt-10 md:grid-cols-3">
-            {metrics.map((metric) => (
-              <div
-                key={metric.label}
-                className="rounded-2xl border border-white/5 bg-white/5 p-6 text-left backdrop-blur-sm transition-all duration-300 hover:border-[#d4af37]/60"
-              >
-                <div className="mb-2 text-4xl font-bold text-white md:text-5xl">{metric.value}</div>
-                <div className="mb-2 text-sm uppercase tracking-[0.3em] text-[#d4af37]">{metric.label}</div>
-                <p className="text-sm text-gray-400">{metric.description}</p>
-              </div>
-            ))}
-          </div>
+        <p className="max-w-2xl text-base text-white/70 sm:text-lg">
+          India&apos;s First Quantitative Forex Hedge
+        </p>
 
-          <div className="flex items-end gap-2 pt-6 opacity-70">
-            {Array.from({ length: 12 }).map((_, index) => (
-              <span
-                key={index}
-                className="flex-1 rounded-full bg-gradient-to-t from-[#d4af37]/10 via-[#d4af37]/40 to-[#d4af37]/80"
-                style={{
-                  height: `${40 + Math.sin(index) * 25 + (index % 2 === 0 ? 30 : 10)}%`,
-                  animationDelay: `${index * 0.1}s`,
-                }}
-                aria-hidden
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="relative flex items-center justify-center">
-          <div className="absolute -inset-10 rounded-[48px] border border-white/10 bg-gradient-to-br from-white/10 via-[#f6d47d]/10 to-transparent blur-3xl" />
-          <div className="relative w-full max-w-md overflow-hidden rounded-[40px] border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
-            <div className="absolute inset-x-10 top-6 flex items-center justify-between text-[0.65rem] uppercase tracking-[0.4em] text-white/35">
-              <span>Quant stack</span>
-              <span>Live desk</span>
-            </div>
-            <div className="relative mt-10 h-72 overflow-hidden rounded-3xl border border-white/10 bg-black/70">
-              <Suspense fallback={<div className="flex h-full items-center justify-center text-white/50">Loading...</div>}>
-                <CandleChart3D />
-              </Suspense>
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black via-black/80 to-transparent" />
-            </div>
-            <div className="mt-6 space-y-4">
-              <div className="flex items-center justify-between text-sm text-white/70">
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                  Execution feed synced
-                </span>
-                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs text-emerald-200">
-                  +4.3% daily
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-3 text-xs text-white/50">
-                <div className="rounded-2xl border border-white/10 bg-black/60 p-4">
-                  <p className="text-[0.6rem] uppercase tracking-[0.45em] text-white/30">Risk Envelope</p>
-                  <p className="mt-2 text-xl text-white">0.9%</p>
-                  <p className="text-white/40">VaR (rolling 30d)</p>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-black/60 p-4">
-                  <p className="text-[0.6rem] uppercase tracking-[0.45em] text-white/30">Capital Deploy</p>
-                  <p className="mt-2 text-xl text-white">₹3.8Cr</p>
-                  <p className="text-white/40">Live across desks</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Button
+          asChild
+          className="group h-auto rounded-full border border-[#f6d47d]/50 bg-[#f6d47d] px-12 py-4 text-base font-semibold text-[#1a1202] shadow-[0_24px_55px_rgba(246,212,125,0.35)] transition-transform duration-300 hover:-translate-y-1 hover:bg-[#ffde8f]"
+        >
+          <Link href="https://app.tradingwala.co.in/" className="flex items-center gap-3">
+            <span>Join the Revolutions</span>
+            <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1 motion-safe:animate-pulse" strokeWidth={2.6} />
+          </Link>
+        </Button>
       </div>
 
-      {/* Floating decorative elements */}
-      <div className="absolute left-1/4 top-1/4 h-2 w-2 rounded-full bg-[#d4af37] animate-float" />
-      <div className="absolute right-1/4 top-1/3 h-3 w-3 rounded-full bg-white animate-float" style={{ animationDelay: "1s" }} />
-      <div className="absolute bottom-1/4 left-1/3 h-2 w-2 rounded-full bg-[#d4af37] animate-float" style={{ animationDelay: "2s" }} />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent via-[#020203]/75 to-[#020203]" />
+      <div className="absolute left-1/4 top-1/3 h-3 w-3 rounded-full bg-[#d4af37] opacity-80 blur-[1px] animate-float" />
+      <div className="absolute right-1/4 top-1/2 h-4 w-4 rounded-full bg-white/80 opacity-80 blur-[1px] animate-float" style={{ animationDelay: "1s" }} />
+      <div className="absolute left-1/2 bottom-1/4 h-2.5 w-2.5 rounded-full bg-[#d4af37] opacity-70 blur-[1px] animate-float" style={{ animationDelay: "1.6s" }} />
     </section>
   )
 }
