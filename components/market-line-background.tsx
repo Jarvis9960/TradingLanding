@@ -21,6 +21,43 @@ const COLORS = {
   },
 }
 
+type LineEnvironment = {
+  prefersReducedMotion: boolean
+  isMobile: boolean
+}
+
+type LineConfig = {
+  pointCount: number
+  baselineRatio: number
+  amplitudeRatio: number
+  updateInterval: number
+  headSpeedDivisor: number
+  patternBounds: readonly [readonly [number, number], ...readonly [number, number][]]
+}
+
+const PATTERN_BOUNDS = [
+  [0.42, 0.58],
+  [-0.3, -0.08],
+  [0.22, 0.36],
+  [-0.64, -0.42],
+  [0.14, 0.3],
+  [-0.34, -0.14],
+] as const
+
+const createConfig = (env: LineEnvironment): LineConfig => {
+  const densityScale = env.prefersReducedMotion ? 0.38 : env.isMobile ? 0.62 : 1
+  const amplitudeScale = env.prefersReducedMotion ? 0.6 : env.isMobile ? 0.82 : 1
+
+  return {
+    pointCount: Math.max(160, Math.floor(420 * densityScale)),
+    baselineRatio: 0.52,
+    amplitudeRatio: 0.22 * amplitudeScale,
+    updateInterval: env.prefersReducedMotion ? 120 : env.isMobile ? 90 : 70,
+    headSpeedDivisor: env.prefersReducedMotion ? 140 : env.isMobile ? 110 : 90,
+    patternBounds: PATTERN_BOUNDS,
+  }
+}
+
 export default function MarketLineBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -31,24 +68,16 @@ export default function MarketLineBackground() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const getEnvironment = (): LineEnvironment => ({
+      prefersReducedMotion: motionQuery.matches,
+      isMobile: window.innerWidth < 768,
+    })
+
+    let env = getEnvironment()
+    let config = createConfig(env)
     let animationFrame = 0
     const points: number[] = []
-    const config = {
-      pointCount: 420,
-      baselineRatio: 0.52,
-      amplitudeRatio: 0.22,
-      updateInterval: 70,
-      headSpeedDivisor: 90,
-      patternBounds: [
-        [0.42, 0.58],
-        [-0.3, -0.08],
-        [0.22, 0.36],
-        [-0.64, -0.42],
-        [0.14, 0.3],
-        [-0.34, -0.14],
-      ] as const,
-    }
-
     const pickWithinBounds = (range: readonly [number, number]) => range[0] + Math.random() * (range[1] - range[0])
 
     let lastUpdate = 0
@@ -61,9 +90,15 @@ export default function MarketLineBackground() {
       elapsed: 0,
     }
 
+    const syncEnvironment = () => {
+      env = getEnvironment()
+      config = createConfig(env)
+    }
+
     const resize = () => {
       const { width, height } = canvas.getBoundingClientRect()
-      const dpr = window.devicePixelRatio || 1
+      const dprCap = env.prefersReducedMotion ? 1.5 : env.isMobile ? 1.75 : 2.5
+      const dpr = Math.min(window.devicePixelRatio || 1, dprCap)
       canvas.width = width * dpr
       canvas.height = height * dpr
       ctx.setTransform(1, 0, 0, 1, 0, 0)
@@ -135,9 +170,9 @@ export default function MarketLineBackground() {
 
     const drawGrid = (width: number, height: number, time: number) => {
       ctx.save()
-      ctx.globalAlpha = 0.55
+      ctx.globalAlpha = env.isMobile ? 0.35 : 0.55
 
-      const verticalSpacing = Math.max(width / 12, 140)
+      const verticalSpacing = env.isMobile ? Math.max(width / 3, 160) : Math.max(width / 12, 140)
       ctx.strokeStyle = "rgba(255,255,255,0.05)"
       ctx.lineWidth = 1
       for (let x = (time / 18) % verticalSpacing; x < width; x += verticalSpacing) {
@@ -147,7 +182,7 @@ export default function MarketLineBackground() {
         ctx.stroke()
       }
 
-      const horizontalSpacing = height / 6
+      const horizontalSpacing = env.isMobile ? height / 4 : height / 6
       ctx.strokeStyle = "rgba(150,116,255,0.05)"
       for (let y = horizontalSpacing; y < height; y += horizontalSpacing) {
         ctx.beginPath()
@@ -161,7 +196,8 @@ export default function MarketLineBackground() {
 
     const drawLine = (width: number, time: number) => {
       const slice = width / (points.length - 1)
-      const progress = ((time / config.headSpeedDivisor) % (points.length - 1))
+      const referenceTime = env.prefersReducedMotion ? lastUpdate : time
+      const progress = ((referenceTime / config.headSpeedDivisor) % (points.length - 1))
       const progressIndex = Math.floor(progress)
       const partial = progress - progressIndex
 
@@ -294,9 +330,11 @@ export default function MarketLineBackground() {
       ctx.fillStyle = gradient
       ctx.fillRect(0, 0, width, height)
 
-      ctx.globalCompositeOperation = "lighter"
-      ctx.fillStyle = "rgba(246,212,125,0.08)"
-      ctx.fillRect(0, 0, width, height)
+      if (!env.isMobile && !env.prefersReducedMotion) {
+        ctx.globalCompositeOperation = "lighter"
+        ctx.fillStyle = "rgba(246,212,125,0.08)"
+        ctx.fillRect(0, 0, width, height)
+      }
       ctx.restore()
     }
 
@@ -309,32 +347,47 @@ export default function MarketLineBackground() {
       drawGlow(width, height)
       drawGrid(width, height, time)
       drawLine(width, time)
-      drawHead(width, time)
+      if (!env.prefersReducedMotion && !env.isMobile) {
+        drawHead(width, time)
+      }
 
-      if (time - lastUpdate >= config.updateInterval) {
+      if (!env.prefersReducedMotion && time - lastUpdate >= config.updateInterval) {
         updatePoints(time)
         lastUpdate = time
       }
-      animationFrame = requestAnimationFrame(render)
+
+      if (!env.prefersReducedMotion) {
+        animationFrame = requestAnimationFrame(render)
+      }
     }
 
-    const handleResize = () => {
+    const handleEnvironmentChange = () => {
+      cancelAnimationFrame(animationFrame)
+      syncEnvironment()
       resize()
       initPoints()
       lastUpdate = performance.now()
+      render()
     }
 
-    resize()
-    initPoints()
-    lastUpdate = performance.now()
-    animationFrame = requestAnimationFrame(render)
+    handleEnvironmentChange()
 
     let resizeObserver: ResizeObserver | null = null
     if (typeof ResizeObserver !== "undefined") {
-      resizeObserver = new ResizeObserver(handleResize)
+      resizeObserver = new ResizeObserver(handleEnvironmentChange)
       resizeObserver.observe(canvas)
     } else {
-      window.addEventListener("resize", handleResize)
+      window.addEventListener("resize", handleEnvironmentChange)
+    }
+
+    const handleMotionPreferenceChange = () => {
+      handleEnvironmentChange()
+    }
+
+    if (motionQuery.addEventListener) {
+      motionQuery.addEventListener("change", handleMotionPreferenceChange)
+    } else {
+      motionQuery.addListener(handleMotionPreferenceChange)
     }
 
     return () => {
@@ -342,7 +395,12 @@ export default function MarketLineBackground() {
       if (resizeObserver) {
         resizeObserver.disconnect()
       } else {
-        window.removeEventListener("resize", handleResize)
+        window.removeEventListener("resize", handleEnvironmentChange)
+      }
+      if (motionQuery.removeEventListener) {
+        motionQuery.removeEventListener("change", handleMotionPreferenceChange)
+      } else {
+        motionQuery.removeListener(handleMotionPreferenceChange)
       }
     }
   }, [])

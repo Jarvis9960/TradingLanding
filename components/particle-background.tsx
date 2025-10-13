@@ -25,7 +25,7 @@ type Particle = {
   layer: LayerConfig
 }
 
-const LAYERS: LayerConfig[] = [
+const BASE_LAYERS: LayerConfig[] = [
   {
     count: 45,
     size: [0.4, 1.1],
@@ -70,10 +70,13 @@ export default function ParticleBackground() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+
     let particles: Particle[] = []
     let animationFrameId: number
     let width = 0
     let height = 0
+    let activeLayers: LayerConfig[] = []
 
     const pointer = {
       x: window.innerWidth / 2,
@@ -84,9 +87,79 @@ export default function ParticleBackground() {
 
     const scroll = { value: window.scrollY }
 
+    const computeEnvironment = () => {
+      const prefersReducedMotion = motionQuery.matches
+      const currentWidth = window.innerWidth
+      const isMobile = currentWidth < 768
+
+      if (prefersReducedMotion) {
+        return {
+          shouldAnimate: false,
+          layers: [] as LayerConfig[],
+          enablePointer: false,
+        }
+      }
+
+      const densityScale = isMobile ? 0.45 : 1
+      const speedScale = isMobile ? 0.75 : 1
+      const pointerScale = isMobile ? 0.35 : 1
+
+      return {
+        shouldAnimate: true,
+        layers: BASE_LAYERS.map((layer) => ({
+          ...layer,
+          count: Math.max(6, Math.floor(layer.count * densityScale)),
+          speedY: [layer.speedY[0] * speedScale, layer.speedY[1] * speedScale] as [number, number],
+          speedX: [layer.speedX[0] * speedScale, layer.speedX[1] * speedScale] as [number, number],
+          pointer: layer.pointer * pointerScale,
+          parallax: layer.parallax * speedScale,
+          opacity: [
+            layer.opacity[0] * (isMobile ? 0.9 : 1),
+            layer.opacity[1] * (isMobile ? 0.9 : 1),
+          ] as [number, number],
+        })),
+        enablePointer: !isMobile,
+      }
+    }
+
+    let enablePointer = true
+
+    const syncEnvironment = () => {
+      const env = computeEnvironment()
+      enablePointer = env.enablePointer
+      activeLayers = env.layers
+
+      if (!env.shouldAnimate) {
+        cancelAnimationFrame(animationFrameId)
+        ctx.clearRect(0, 0, width, height)
+        canvas.style.display = "none"
+        particles = []
+        return false
+      }
+
+      canvas.style.display = ""
+      return true
+    }
+
+    if (!syncEnvironment()) {
+      const handlePreferenceChange = () => syncEnvironment()
+      if (motionQuery.addEventListener) {
+        motionQuery.addEventListener("change", handlePreferenceChange)
+      } else {
+        motionQuery.addListener(handlePreferenceChange)
+      }
+      return () => {
+        if (motionQuery.removeEventListener) {
+          motionQuery.removeEventListener("change", handlePreferenceChange)
+        } else {
+          motionQuery.removeListener(handlePreferenceChange)
+        }
+      }
+    }
+
     const createParticles = () => {
       particles = []
-      LAYERS.forEach((layer) => {
+      activeLayers.forEach((layer) => {
         for (let i = 0; i < layer.count; i++) {
           particles.push({
             x: Math.random() * width,
@@ -106,6 +179,7 @@ export default function ParticleBackground() {
     const resizeCanvas = () => {
       width = window.innerWidth
       height = window.innerHeight
+      syncEnvironment()
 
       const ratio = window.devicePixelRatio || 1
       canvas.width = width * ratio
@@ -118,11 +192,13 @@ export default function ParticleBackground() {
     }
 
     const handlePointerMove = (event: PointerEvent) => {
+      if (!enablePointer) return
       pointer.targetX = event.clientX
       pointer.targetY = event.clientY
     }
 
     const handlePointerLeave = () => {
+      if (!enablePointer) return
       pointer.targetX = width / 2
       pointer.targetY = height / 2
     }
@@ -181,12 +257,29 @@ export default function ParticleBackground() {
     window.addEventListener("pointermove", handlePointerMove)
     window.addEventListener("pointerleave", handlePointerLeave)
     window.addEventListener("scroll", handleScroll, { passive: true })
+    const handlePreferenceChange = () => {
+      const shouldAnimate = syncEnvironment()
+      if (shouldAnimate) {
+        resizeCanvas()
+      }
+    }
+    if (motionQuery.addEventListener) {
+      motionQuery.addEventListener("change", handlePreferenceChange)
+    } else {
+      // Safari < 14 fallback
+      motionQuery.addListener(handlePreferenceChange)
+    }
 
     return () => {
       window.removeEventListener("resize", resizeCanvas)
       window.removeEventListener("pointermove", handlePointerMove)
       window.removeEventListener("pointerleave", handlePointerLeave)
       window.removeEventListener("scroll", handleScroll)
+      if (motionQuery.removeEventListener) {
+        motionQuery.removeEventListener("change", handlePreferenceChange)
+      } else {
+        motionQuery.removeListener(handlePreferenceChange)
+      }
       cancelAnimationFrame(animationFrameId)
     }
   }, [])
@@ -195,7 +288,7 @@ export default function ParticleBackground() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-0"
-      style={{ opacity: 0.35 }}
+      style={{ opacity: 0.15 }}
     />
   )
 }

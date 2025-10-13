@@ -102,6 +102,15 @@ export default function ProofSection() {
   const [reviewEmblaRef, reviewEmblaApi] = useEmblaCarousel({ align: "center", loop: false })
   const [payoutIndex, setPayoutIndex] = useState(0)
   const [reviewIndex, setReviewIndex] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+  const reduceAnimations = shouldReduceMotion || isMobile
+
+  useEffect(() => {
+    const updateIsMobile = () => setIsMobile(window.innerWidth < 768)
+    updateIsMobile()
+    window.addEventListener("resize", updateIsMobile)
+    return () => window.removeEventListener("resize", updateIsMobile)
+  }, [])
 
   useEffect(() => {
     if (!payoutEmblaApi) {
@@ -112,7 +121,7 @@ export default function ProofSection() {
     onSelect()
     payoutEmblaApi.on("select", onSelect)
 
-    if (shouldReduceMotion) {
+    if (reduceAnimations) {
       return () => {
         const removable = payoutEmblaApi as unknown as { off?: (event: string, handler: () => void) => void }
         removable.off?.("select", onSelect)
@@ -145,7 +154,7 @@ export default function ProofSection() {
       const removable = payoutEmblaApi as unknown as { off?: (event: string, handler: () => void) => void }
       removable.off?.("select", onSelect)
     }
-  }, [payoutEmblaApi, shouldReduceMotion])
+  }, [payoutEmblaApi, reduceAnimations])
 
   useEffect(() => {
     if (!reviewEmblaApi) {
@@ -156,7 +165,7 @@ export default function ProofSection() {
     onSelect()
     reviewEmblaApi.on("select", onSelect)
 
-    if (shouldReduceMotion) {
+    if (reduceAnimations) {
       return () => {
         const removable = reviewEmblaApi as unknown as { off?: (event: string, handler: () => void) => void }
         removable.off?.("select", onSelect)
@@ -189,11 +198,11 @@ export default function ProofSection() {
       const removable = reviewEmblaApi as unknown as { off?: (event: string, handler: () => void) => void }
       removable.off?.("select", onSelect)
     }
-  }, [reviewEmblaApi, shouldReduceMotion])
+  }, [reduceAnimations, reviewEmblaApi])
 
   const payoutCarousel = useMemo(
     () => (
-      <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.06] p-8 shadow-[0_38px_120px_rgba(5,3,18,0.68)] backdrop-blur-2xl sm:p-12">
+      <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.06] p-8 shadow-[0_38px_120px_rgba(5,3,18,0.68)] sm:p-12 sm:backdrop-blur-2xl">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(246,212,125,0.18),_transparent_70%)] opacity-80" />
         <div className="pointer-events-none absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-[#040306] via-[#040306]/75 to-transparent" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-28 bg-gradient-to-l from-[#040306] via-[#040306]/75 to-transparent" />
@@ -212,25 +221,25 @@ export default function ProofSection() {
             <div className="flex gap-8">
               {payouts.map((payout, index) => {
                 const isActive = payoutIndex === index
-                return (
-                  <motion.article
-                    key={payout.id}
-                    className="group relative flex min-h-[260px] flex-[0_0_88%] flex-col justify-between overflow-hidden rounded-[28px] border border-white/12 bg-white/[0.12] p-8 text-left text-white shadow-[0_30px_95px_rgba(5,3,18,0.55)] backdrop-blur-xl transition-all duration-500 will-change-transform sm:flex-[0_0_70%] lg:flex-[0_0_45%]"
-                    animate={
-                      shouldReduceMotion
-                        ? undefined
-                        : {
-                            opacity: isActive ? 1 : 0.55,
-                            scale: isActive ? 1 : 0.92,
-                            translateY: isActive ? 0 : 18,
-                          }
-                    }
-                    whileHover={shouldReduceMotion ? undefined : { scale: 1.05, rotateX: -4, rotateY: 4 }}
-                    transition={{ type: "spring", stiffness: 220, damping: 28 }}
-                    style={{ transformStyle: "preserve-3d" }}
-                  >
-                    <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(246,212,125,0.28),_transparent_72%)]" />
+                  return (
+                    <motion.article
+                      key={payout.id}
+                      className="group relative flex min-h-[260px] flex-[0_0_88%] flex-col justify-between overflow-hidden rounded-[28px] border border-white/12 bg-white/[0.12] p-8 text-left text-white shadow-[0_30px_95px_rgba(5,3,18,0.55)] transition-all duration-500 will-change-transform sm:flex-[0_0_70%] sm:backdrop-blur-xl lg:flex-[0_0_45%]"
+                      animate={
+                        reduceAnimations
+                          ? undefined
+                          : {
+                              opacity: isActive ? 1 : 0.55,
+                              scale: isActive ? 1 : 0.92,
+                              translateY: isActive ? 0 : 18,
+                            }
+                      }
+                      whileHover={reduceAnimations ? undefined : { scale: 1.05, rotateX: -4, rotateY: 4 }}
+                      transition={{ type: "spring", stiffness: 220, damping: 28 }}
+                      style={{ transformStyle: "preserve-3d" }}
+                    >
+                      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(246,212,125,0.28),_transparent_72%)]" />
                       <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.12),rgba(10,5,24,0.85))]" />
                     </div>
                     <div className="relative z-10 flex items-center justify-between">
@@ -269,12 +278,12 @@ export default function ProofSection() {
         </div>
       </div>
     ),
-    [payoutEmblaRef, payoutIndex, shouldReduceMotion],
+    [payoutEmblaRef, payoutIndex, reduceAnimations],
   )
 
   const reviewCarousel = useMemo(
     () => (
-      <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[#06030f]/90 p-8 shadow-[0_40px_130px_rgba(4,3,14,0.72)] backdrop-blur-2xl sm:p-12">
+      <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[#06030f]/90 p-8 shadow-[0_40px_130px_rgba(4,3,14,0.72)] sm:p-12 sm:backdrop-blur-2xl">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom,_rgba(112,72,255,0.2),_transparent_72%)] opacity-80" />
         <div className="pointer-events-none absolute inset-y-0 left-0 w-28 bg-gradient-to-r from-[#040306] via-[#040306]/75 to-transparent" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-28 bg-gradient-to-l from-[#040306] via-[#040306]/75 to-transparent" />
@@ -293,25 +302,25 @@ export default function ProofSection() {
             <div className="flex gap-8 pb-2">
               {testimonials.map((testimonial, index) => {
                 const isActive = reviewIndex === index
-                return (
-                  <motion.article
-                    key={testimonial.id}
-                    className="group relative flex min-h-[280px] flex-[0_0_92%] flex-col justify-between overflow-hidden rounded-[28px] border border-white/12 bg-white/[0.05] p-8 text-left text-white shadow-[0_32px_100px_rgba(4,3,14,0.62)] backdrop-blur-xl transition-all duration-500 will-change-transform sm:flex-[0_0_72%] lg:flex-[0_0_46%]"
-                    animate={
-                      shouldReduceMotion
-                        ? undefined
-                        : {
-                            opacity: isActive ? 1 : 0.56,
-                            scale: isActive ? 1 : 0.94,
-                            translateY: isActive ? 0 : 18,
-                          }
-                    }
-                    whileHover={shouldReduceMotion ? undefined : { scale: 1.04, translateY: -12 }}
-                    transition={{ type: "spring", stiffness: 210, damping: 30 }}
-                  >
-                    <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(112,72,255,0.26),_transparent_78%)]" />
-                      <div className="absolute inset-0 bg-[linear-gradient(150deg,rgba(255,255,255,0.09),rgba(6,3,18,0.82))]" />
+                  return (
+                    <motion.article
+                      key={testimonial.id}
+                      className="group relative flex min-h-[280px] flex-[0_0_92%] flex-col justify-between overflow-hidden rounded-[28px] border border-white/12 bg-white/[0.05] p-8 text-left text-white shadow-[0_32px_100px_rgba(4,3,14,0.62)] transition-all duration-500 will-change-transform sm:flex-[0_0_72%] sm:backdrop-blur-xl lg:flex-[0_0_46%]"
+                      animate={
+                        reduceAnimations
+                          ? undefined
+                          : {
+                              opacity: isActive ? 1 : 0.56,
+                              scale: isActive ? 1 : 0.94,
+                              translateY: isActive ? 0 : 18,
+                            }
+                      }
+                      whileHover={reduceAnimations ? undefined : { scale: 1.04, translateY: -12 }}
+                      transition={{ type: "spring", stiffness: 210, damping: 30 }}
+                    >
+                      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(112,72,255,0.26),_transparent_78%)]" />
+                        <div className="absolute inset-0 bg-[linear-gradient(150deg,rgba(255,255,255,0.09),rgba(6,3,18,0.82))]" />
                     </div>
                     <div className="relative z-10 space-y-5">
                       <div className="flex items-center gap-2 text-[#f6d47d]">
@@ -341,7 +350,7 @@ export default function ProofSection() {
         </div>
       </div>
     ),
-    [reviewEmblaRef, reviewIndex, shouldReduceMotion],
+    [reduceAnimations, reviewEmblaRef, reviewIndex],
   )
 
   const containerVariants = {
@@ -350,7 +359,7 @@ export default function ProofSection() {
       opacity: 1,
       y: 0,
       transition: {
-        duration: shouldReduceMotion ? 0 : 0.9,
+        duration: reduceAnimations ? 0 : 0.9,
         ease: [0.43, 0.13, 0.23, 0.96],
       },
     },
@@ -358,7 +367,7 @@ export default function ProofSection() {
 
   return (
     <motion.section
-      initial={shouldReduceMotion ? "visible" : "hidden"}
+      initial={reduceAnimations ? "visible" : "hidden"}
       whileInView="visible"
       viewport={{ once: true, amount: 0.25 }}
       variants={containerVariants}
@@ -370,13 +379,13 @@ export default function ProofSection() {
         <motion.div
           aria-hidden
           className="absolute -left-32 top-1/3 h-72 w-72 rounded-full bg-[#f6d47d]/18 blur-[140px]"
-          animate={shouldReduceMotion ? undefined : LEFT_ORB_ANIMATION}
+          animate={reduceAnimations ? undefined : LEFT_ORB_ANIMATION}
           transition={LEFT_ORB_TRANSITION}
         />
         <motion.div
           aria-hidden
           className="absolute right-[-18%] top-1/4 h-80 w-80 rounded-full bg-[#7048ff]/20 blur-[150px]"
-          animate={shouldReduceMotion ? undefined : RIGHT_ORB_ANIMATION}
+          animate={reduceAnimations ? undefined : RIGHT_ORB_ANIMATION}
           transition={RIGHT_ORB_TRANSITION}
         />
       </div>
