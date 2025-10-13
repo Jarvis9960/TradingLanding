@@ -108,7 +108,7 @@ export default function IntelligenceSection() {
       whileInView="visible"
       viewport={{ once: true, amount: 0.35 }}
       variants={sectionVariants}
-      className="relative z-10 overflow-hidden py-32 px-4 md:px-8"
+      className="relative z-10 overflow-hidden py-20 px-4 md:px-8"
     >
       <div
         className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-black/80 to-[#050505]"
