@@ -184,6 +184,33 @@
   }
 }
 
+@keyframes auroraFlow {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.35;
+  }
+  45% {
+    transform: rotate(6deg) scale(1.05);
+    opacity: 0.55;
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.35;
+  }
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 1s ease-out forwards;
 }
@@ -215,6 +242,15 @@
 .animate-shimmer {
   background-size: 200% 100%;
   animation: shimmer 3s linear infinite;
+}
+
+.animate-aurora {
+  animation: auroraFlow 18s ease-in-out infinite;
+}
+
+.animate-gradient-flow {
+  background-size: 180% 180%;
+  animation: gradientFlow 16s ease-in-out infinite;
 }
 
 /* Added glassmorphism utility classes */
