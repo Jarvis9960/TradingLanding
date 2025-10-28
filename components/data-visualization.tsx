@@ -68,8 +68,6 @@ export default function DataVisualization() {
     <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-[#05070f]/85 p-8 shadow-[0_30px_90px_rgba(5,10,28,0.55)] backdrop-blur-2xl sm:p-10">
       <div className="pointer-events-none absolute inset-0 rounded-[36px] border border-white/5" aria-hidden="true" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),transparent_70%)]" aria-hidden="true" />
-      <div className="pointer-events-none absolute -right-16 top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,_rgba(167,137,255,0.35)_0%,_rgba(5,7,15,0)_70%)] blur-3xl" aria-hidden="true" />
-      <div className="pointer-events-none absolute -left-20 bottom-10 h-64 w-64 rounded-full bg-[radial-gradient(circle,_rgba(109,255,227,0.28)_0%,_rgba(5,7,15,0)_70%)] blur-3xl" aria-hidden="true" />
 
       <div className="relative z-10 flex flex-col gap-10">
         <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-6 shadow-[0_20px_60px_rgba(6,12,26,0.5)]">
@@ -85,7 +83,7 @@ export default function DataVisualization() {
                 Live
               </span>
             </div>
-            <p className="max-w-xl text-sm text-white/65">
+            <p className="max-w-xl break-words text-sm text-white/65">
               Collates machine foresight, human intervention notes, and liquidity telemetry into a single ambient layer that stays readable even when markets accelerate.
             </p>
           </div>
@@ -119,7 +117,7 @@ export default function DataVisualization() {
                         {stream.meta}
                       </span>
                     </div>
-                    <p className="text-sm leading-relaxed text-white/65">{stream.description}</p>
+                    <p className="break-words text-sm leading-relaxed text-white/65">{stream.description}</p>
                     <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10">
                       <div
                         className={`h-full rounded-full bg-gradient-to-r ${stream.accent}`}
@@ -165,7 +163,7 @@ export default function DataVisualization() {
               <div className="relative space-y-2">
                 <p className="text-[0.7rem] uppercase tracking-[0.35em] text-white/45">{tile.title}</p>
                 <p className="text-3xl font-semibold text-white">{tile.metric}</p>
-                <p className="text-sm text-white/65">{tile.detail}</p>
+                <p className="break-words text-sm text-white/65">{tile.detail}</p>
               </div>
             </div>
           ))}
