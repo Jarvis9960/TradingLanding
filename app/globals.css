@@ -239,3 +239,49 @@
     -webkit-backdrop-filter: none;
   }
 }
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.98);
+    filter: blur(0px);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.03);
+    filter: blur(1.5px);
+  }
+}
+
+@keyframes orbit-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-float-soft {
+  animation: float-soft 12s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 9s ease-in-out infinite;
+}
+
+.animate-orbit-slow {
+  animation: orbit-slow 42s linear infinite;
+}
+
