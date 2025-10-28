@@ -157,13 +157,13 @@ export default function ProofSection() {
           </p>
         </motion.div>
 
-        <div className="flex flex-col gap-16 xl:flex-row">
+        <div className="flex flex-col gap-16">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, ease: "easeOut" }}
             viewport={{ once: true, margin: "-120px" }}
-            className="relative flex-1"
+            className="relative w-full"
           >
             <div className="pointer-events-none absolute -left-10 top-1/2 hidden h-64 w-64 -translate-y-1/2 rounded-full bg-[#f6d47d]/10 blur-[90px] md:block" />
             <div className="relative flex h-full flex-col rounded-[36px] border border-white/10 bg-white/[0.05] p-8 shadow-[0_45px_140px_rgba(5,3,18,0.45)] sm:p-12">
@@ -189,7 +189,7 @@ export default function ProofSection() {
                   {payouts.map((payout, index) => (
                     <CarouselItem
                       key={payout.id}
-                      className="basis-[85%] pl-6 sm:basis-[70%] sm:pl-8 lg:basis-[55%]"
+                      className="basis-full pl-6 sm:basis-[70%] sm:pl-8 lg:basis-[55%]"
                     >
                       <motion.article
                         style={payoutStyle(index)}
@@ -229,7 +229,7 @@ export default function ProofSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
             viewport={{ once: true, margin: "-120px" }}
-            className="relative flex-1"
+            className="relative w-full"
           >
             <div className="pointer-events-none absolute -right-10 top-1/3 hidden h-64 w-64 -translate-y-1/2 rounded-full bg-[#7048ff]/10 blur-[100px] md:block" />
             <div className="relative flex h-full flex-col rounded-[36px] border border-white/10 bg-[#06030f]/95 p-8 shadow-[0_50px_150px_rgba(4,3,14,0.5)] sm:p-12">
@@ -253,7 +253,7 @@ export default function ProofSection() {
                   {testimonials.map((testimonial, index) => (
                     <CarouselItem
                       key={testimonial.id}
-                      className="basis-[90%] pl-6 sm:basis-[72%] sm:pl-8 lg:basis-[60%]"
+                      className="basis-full pl-6 sm:basis-[72%] sm:pl-8 lg:basis-[60%]"
                     >
                       <motion.article
                         style={testimonialStyle(index)}
