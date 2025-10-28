@@ -81,10 +81,10 @@ export default function DataVisualization() {
               Live feed
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
             </div>
-            <div className="absolute bottom-5 right-5 rounded-2xl border border-white/10 bg-black/70 px-4 py-3 text-left shadow-[0_16px_36px_rgba(6,10,22,0.5)]">
-              <p className="text-[0.65rem] uppercase tracking-[0.4em] text-white/45">Variance</p>
-              <p className="mt-1 text-lg font-semibold text-white">0.13% drawdown</p>
-              <p className="text-xs text-white/50">last 30 sessions</p>
+            <div className="absolute bottom-5 right-5 max-w-[190px] space-y-1.5 rounded-2xl border border-white/10 bg-black/70 px-4 py-3 text-left shadow-[0_16px_36px_rgba(6,10,22,0.5)]">
+              <p className="text-[0.65rem] uppercase tracking-[0.35em] text-white/45">Variance</p>
+              <p className="text-lg font-semibold leading-snug text-white">0.13% drawdown</p>
+              <p className="text-xs leading-relaxed text-white/60">last 30 sessions</p>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@ export default function DataVisualization() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
             {insights.map((item, index) => (
               <div
                 key={item.label}
@@ -108,7 +108,7 @@ export default function DataVisualization() {
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(103,233,255,0.18),transparent_70%)] opacity-0 transition duration-500 group-hover/insight:opacity-100" />
                 <div className="relative space-y-3">
                   <span className="text-3xl font-semibold text-white sm:text-[2.4rem]">{item.value}</span>
-                  <span className="block text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-white/70">{item.label}</span>
+                  <span className="block text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-white/70">{item.label}</span>
                   <p className="text-sm leading-relaxed text-white/65">{item.detail}</p>
                 </div>
               </div>
