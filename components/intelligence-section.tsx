@@ -7,12 +7,6 @@ type MetricHighlight = {
   accent: string
 }
 
-type Capability = {
-  title: string
-  description: string
-  signal: string
-}
-
 const metricHighlights: MetricHighlight[] = [
   {
     value: "99.7%",
@@ -38,30 +32,6 @@ const metricHighlights: MetricHighlight[] = [
     detail: "Liquidity and risk signals stitch together from cash, derivatives, and dark pools.",
     accent: "from-[#6fffd6] via-[#c9ffe9] to-[#6fffd6]",
   },
-]
-
-const capabilities: Capability[] = [
-  {
-    title: "Live diagnostics",
-    description: "Variance, flow health, and counterparty posture surface in one console with escalation baked in.",
-    signal: "Proactive by design",
-  },
-  {
-    title: "Scenario rehearsal",
-    description: "Synthetic stress packages replay shocks against current inventory and liquidity seams within minutes.",
-    signal: "Ready before open",
-  },
-  {
-    title: "Operator bridge",
-    description: "Human oversight plugs into automation with context swaps, so decisions and code stay synchronized.",
-    signal: "Human + machine",
-  },
-]
-
-const rhythmBeats = [
-  { title: "Pulse", value: "steady", accent: "from-[#f8c660]/25 via-transparent to-transparent" },
-  { title: "Spread", value: "tight", accent: "from-[#67e9ff]/25 via-transparent to-transparent" },
-  { title: "Flow", value: "balanced", accent: "from-[#6fffd6]/25 via-transparent to-transparent" },
 ]
 
 export default function IntelligenceSection() {
@@ -118,42 +88,6 @@ export default function IntelligenceSection() {
                   </div>
                 </article>
               ))}
-            </div>
-
-            <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-8 shadow-[0_24px_70px_rgba(5,10,24,0.5)] backdrop-blur-xl">
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(248,198,96,0.18),transparent_70%)]" aria-hidden="true" />
-              <div className="relative space-y-6 text-left">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.45em] text-white/55">Operator Console</p>
-                    <h3 className="mt-2 text-2xl font-semibold text-white sm:text-[2.3rem]">Everything stitched in sync</h3>
-                  </div>
-                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-4 py-1.5 text-[0.65rem] uppercase tracking-[0.35em] text-white/60">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
-                    Live feed
-                  </span>
-                </div>
-                <p className="max-w-md text-sm text-white/65">
-                  Live diagnostics, scenario rehearsal, and human bridges flow through one glass surface. Every alert arrives with
-                  a recommended action and confidence so the next move is already in draft.
-                </p>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {capabilities.map((item, index) => (
-                    <div
-                      key={item.title}
-                      className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/50 p-4 text-left shadow-[0_16px_40px_rgba(6,12,26,0.45)] transition duration-500 ease-out hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_20px_55px_rgba(6,12,26,0.5)]"
-                      style={{ transitionDelay: `${index * 90}ms` }}
-                    >
-                      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.1),transparent_70%)]" aria-hidden="true" />
-                      <div className="relative space-y-2">
-                        <p className="text-sm font-semibold text-white">{item.title}</p>
-                        <p className="text-xs leading-relaxed text-white/60">{item.description}</p>
-                        <p className="text-[0.65rem] uppercase tracking-[0.35em] text-white/40">{item.signal}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
 

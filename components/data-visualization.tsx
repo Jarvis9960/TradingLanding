@@ -70,25 +70,6 @@ export default function DataVisualization() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.08),transparent_70%)]" aria-hidden="true" />
 
       <div className="relative z-10 flex flex-col gap-10">
-        <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-6 shadow-[0_20px_60px_rgba(6,12,26,0.5)]">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.14),transparent_70%)]" aria-hidden="true" />
-          <div className="relative flex flex-col gap-4 text-left">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.45em] text-white/55">Orbit Console</p>
-                <h3 className="mt-2 text-2xl font-semibold text-white sm:text-[2.4rem]">Flow synchroniser</h3>
-              </div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-4 py-1.5 text-[0.65rem] uppercase tracking-[0.35em] text-white/60">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
-                Live
-              </span>
-            </div>
-            <p className="max-w-xl break-words text-sm text-white/65">
-              Collates machine foresight, human intervention notes, and liquidity telemetry into a single ambient layer that stays readable even when markets accelerate.
-            </p>
-          </div>
-        </div>
-
         <div className="relative">
           <span className="pointer-events-none absolute left-6 top-0 h-full w-px bg-gradient-to-b from-white/30 via-white/5 to-transparent" aria-hidden="true" />
           <div className="space-y-6">
