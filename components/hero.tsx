@@ -58,8 +58,10 @@ export default function Hero() {
       </div>
 
       <div className="relative z-20 flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-10 pt-16 text-center">
-        <span className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs uppercase tracking-[0.45em] text-white/70">
-          Tradingwala // Quant Desk
+        <span className="inline-flex items-center gap-4 rounded-full border border-white/15 bg-white/10 px-6 py-3 text-sm uppercase tracking-[0.35em] text-white/70 shadow-[0_18px_45px_rgba(6,6,10,0.55)] backdrop-blur-md sm:text-base">
+          <span className="heartbeat-highlight">Tradingwala</span>
+          <span className="hidden h-1.5 w-1.5 rounded-full bg-[#f6d47d]/60 sm:inline-block" aria-hidden />
+          <span className="text-[0.7rem] tracking-[0.3em] text-white/80 sm:text-sm">// Quant Desk</span>
         </span>
 
         <h1 className="text-4xl font-semibold leading-tight sm:text-6xl lg:text-7xl">
