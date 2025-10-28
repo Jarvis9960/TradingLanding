@@ -4,6 +4,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --font-playfair: "Playfair Display", "Georgia", serif;
+  --font-cormorant: "Cormorant Garamond", "Times New Roman", serif;
+  --font-inter: "Inter", "Helvetica Neue", Arial, sans-serif;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
