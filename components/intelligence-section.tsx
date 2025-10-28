@@ -1,7 +1,7 @@
 'use client'
 
-import type { CSSProperties } from "react"
-import { motion } from "framer-motion"
+import { useEffect, useRef, type CSSProperties } from "react"
+import { motion, useAnimationControls, useInView, useReducedMotion } from "framer-motion"
 
 import DataVisualization from "./data-visualization"
 
@@ -107,12 +107,38 @@ const sectionVariants = {
 }
 
 export default function IntelligenceSection() {
+  const prefersReducedMotion = useReducedMotion()
+  const controls = useAnimationControls()
+  const sectionRef = useRef<HTMLElement | null>(null)
+  const isInView = useInView(sectionRef, { once: true, amount: 0.35 })
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      controls.set("visible")
+      return
+    }
+
+    if (isInView) {
+      controls.start("visible")
+    }
+  }, [controls, isInView, prefersReducedMotion])
+
+  useEffect(() => {
+    if (prefersReducedMotion) return
+
+    const fallback = setTimeout(() => {
+      controls.start("visible")
+    }, 800)
+
+    return () => clearTimeout(fallback)
+  }, [controls, prefersReducedMotion])
+
   return (
     <motion.section
+      ref={sectionRef}
       variants={sectionVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.35 }}
+      initial={prefersReducedMotion ? "visible" : "hidden"}
+      animate={controls}
       className="relative z-10 overflow-hidden px-6 py-28 text-white md:px-10"
     >
       <div className="pointer-events-none absolute inset-0 bg-[#02040a]" aria-hidden="true" />
@@ -157,7 +183,7 @@ export default function IntelligenceSection() {
         </motion.div>
       </div>
 
-      <div className="relative mx-auto max-w-6xl space-y-16">
+      <div className="relative z-10 mx-auto max-w-6xl space-y-16">
         <motion.div variants={headingVariants} className="mx-auto max-w-3xl space-y-6 text-center">
           <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-6 py-2 text-[0.7rem] uppercase tracking-[0.55em] text-white/60 shadow-[0_15px_45px_rgba(4,9,18,0.5)] backdrop-blur-xl">
             <span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.6)] animate-pulse-glow" />
