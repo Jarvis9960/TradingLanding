@@ -15,7 +15,16 @@ export default function Hero() {
       className="relative z-10 flex min-h-screen flex-col items-center overflow-hidden bg-[#020203] px-4 pb-16 pt-12 text-white"
       data-hero-section
     >
-      <div className="pointer-events-none absolute inset-0">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          src="/earth-background.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden="true"
+        />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(246,212,125,0.12),_transparent_65%)] opacity-50" />
         <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(5,5,9,0.9),_rgba(8,8,14,0.55))]" />
         <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-[#020203] via-[#020203]/80 to-transparent" />
