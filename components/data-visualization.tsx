@@ -1,47 +1,42 @@
-const pulseStreams = [
+const signalStreams = [
   {
-    label: "Signal",
-    value: "99.9",
-    unit: "%",
-    fill: 95,
+    label: "Signal Health",
+    value: "99.7% alignment",
+    description: "Multi-venue markouts reconcile in real time with hashed audit trails for every fill.",
+    fill: 96,
     accent: "from-[#f8c660] via-[#fef1ba] to-[#f8c660]",
+    meta: "Continuous",
   },
   {
-    label: "Latency",
-    value: "47",
-    unit: "ms",
-    fill: 88,
+    label: "Latency Envelope",
+    value: "48ms median",
+    description: "Predictive routing pivots order flow before congestion hits the matching engine.",
+    fill: 90,
     accent: "from-[#67e9ff] via-[#cbf3ff] to-[#67e9ff]",
+    meta: "Sub-50ms",
   },
   {
-    label: "Cover",
-    value: "24",
-    unit: "hrs",
-    fill: 82,
-    accent: "from-[#6fffd6] via-[#c9ffe9] to-[#6fffd6]",
+    label: "Liquidity Cover",
+    value: "24/7 desk",
+    description: "Global sentinels handover seamlessly so regimes stay observed through every session.",
+    fill: 88,
+    accent: "from-[#a58bff] via-[#e2d9ff] to-[#a58bff]",
+    meta: "Always on",
   },
 ]
 
-const microTiles = [
+const snapshotTiles = [
   {
-    title: "Drift",
-    metric: "-0.4bps",
-    accent: "from-[#f8c660]/35 via-transparent to-transparent",
+    title: "Drawdown Guard",
+    metric: "0.13%",
+    detail: "Variance is throttled via staged throttles with automated unwind scripts on standby.",
+    accent: "from-[#f8c660]/40 via-transparent to-transparent",
   },
   {
-    title: "Spread",
-    metric: "1.2x",
+    title: "Coverage Arc",
+    metric: "40+ venues",
+    detail: "Cash, futures, and dark pools co-exist in a single canvas with impact weighting applied.",
     accent: "from-[#67e9ff]/35 via-transparent to-transparent",
-  },
-  {
-    title: "Flow",
-    metric: "smooth",
-    accent: "from-[#6fffd6]/35 via-transparent to-transparent",
-  },
-  {
-    title: "Risk",
-    metric: "calm",
-    accent: "from-[#a58bff]/35 via-transparent to-transparent",
   },
 ]
 
@@ -54,45 +49,61 @@ export default function DataVisualization() {
       <div className="pointer-events-none absolute -left-20 bottom-10 h-64 w-64 rounded-full bg-[radial-gradient(circle,_rgba(109,255,227,0.28)_0%,_rgba(5,7,15,0)_70%)] blur-3xl" aria-hidden="true" />
 
       <div className="relative z-10 flex flex-col gap-10">
-        <div className="relative flex items-center justify-between rounded-[26px] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent px-6 py-4 shadow-[0_20px_60px_rgba(6,12,26,0.5)]">
-          <div className="flex items-center gap-3 text-left">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-lg text-white/70" aria-hidden="true">
-              ⦿
-            </span>
-            <div>
-              <p className="text-xs uppercase tracking-[0.45em] text-white/45">Pulse board</p>
-              <p className="text-sm text-white/60">Minimal telemetry, live.</p>
+        <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-6 shadow-[0_20px_60px_rgba(6,12,26,0.5)]">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.14),transparent_70%)]" aria-hidden="true" />
+          <div className="relative flex flex-col gap-4 text-left">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.45em] text-white/55">Orbit Console</p>
+                <h3 className="mt-2 text-2xl font-semibold text-white sm:text-[2.4rem]">Flow synchroniser</h3>
+              </div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-4 py-1.5 text-[0.65rem] uppercase tracking-[0.35em] text-white/60">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                Live
+              </span>
             </div>
+            <p className="max-w-xl text-sm text-white/65">
+              Collates machine foresight, human intervention notes, and liquidity telemetry into a single ambient layer that stays
+              readable even when markets accelerate.
+            </p>
           </div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-4 py-1.5 text-[0.65rem] uppercase tracking-[0.35em] text-white/60">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
-            Live
-          </span>
         </div>
 
-        <div className="space-y-4">
-          {pulseStreams.map((stream, index) => (
-            <div
-              key={stream.label}
-              className="group relative overflow-hidden rounded-[26px] border border-white/10 bg-black/60 p-6 shadow-[0_20px_60px_rgba(6,12,26,0.45)] transition duration-500 ease-out hover:-translate-y-1 hover:border-white/25 hover:shadow-[0_26px_75px_rgba(8,14,32,0.55)] opacity-0 animate-fade-in-up"
-              style={{ animationDelay: `${160 + index * 140}ms` }}
-            >
-              <div className={`pointer-events-none absolute inset-0 rounded-[26px] bg-gradient-to-r ${stream.accent} opacity-[0.08]`} aria-hidden="true" />
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.12),transparent_70%)]" aria-hidden="true" />
-              <div className="relative flex items-center justify-between gap-6">
-                <div className="space-y-2 text-left">
-                  <p className="text-[0.65rem] uppercase tracking-[0.45em] text-white/45">{stream.label}</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-semibold text-white">{stream.value}</span>
-                    <span className="text-xs uppercase tracking-[0.4em] text-white/35">{stream.unit}</span>
-                  </div>
-                </div>
-                <div className="h-12 w-12 overflow-hidden rounded-full border border-white/10 bg-black/70 p-1">
-                  <div className="h-full w-full rounded-full bg-gradient-to-br from-white/15 via-transparent to-transparent">
-                    <div
-                      className="h-full w-full origin-center rounded-full border-2 border-dashed border-white/20"
-                      style={{ animation: `spin ${6 + index * 1.5}s linear infinite` }}
-                    />
+        <div className="relative">
+          <span className="pointer-events-none absolute left-6 top-0 h-full w-px bg-gradient-to-b from-white/30 via-white/5 to-transparent" aria-hidden="true" />
+          <div className="space-y-6">
+            {signalStreams.map((stream, index) => (
+              <div
+                key={stream.label}
+                className="group relative pl-12 sm:pl-16 opacity-0 animate-fade-in-up"
+                style={{ animationDelay: `${200 + index * 140}ms` }}
+              >
+                <span className="pointer-events-none absolute left-4 top-1/2 flex h-3 w-3 -translate-y-1/2 items-center justify-center">
+                  <span className="absolute h-8 w-8 rounded-full bg-white/5 blur-lg" />
+                  <span className="relative inline-flex h-3 w-3 items-center justify-center">
+                    <span className="h-3 w-3 rounded-full bg-white/35" />
+                    <span className="absolute h-3 w-3 rounded-full bg-gradient-to-r from-white/60 to-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
+                  </span>
+                </span>
+                <div className="relative overflow-hidden rounded-[26px] border border-white/10 bg-black/60 p-6 shadow-[0_20px_60px_rgba(6,12,26,0.45)] transition duration-500 ease-out hover:-translate-y-1 hover:border-white/25 hover:shadow-[0_26px_75px_rgba(8,14,32,0.55)]">
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.12),transparent_70%)] opacity-0 transition duration-500 group-hover:opacity-100" aria-hidden="true" />
+                  <div className="relative space-y-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.35em] text-white/45">{stream.label}</p>
+                        <p className="mt-2 text-lg font-semibold text-white sm:text-[1.9rem]">{stream.value}</p>
+                      </div>
+                      <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[0.6rem] uppercase tracking-[0.35em] text-white/55">
+                        {stream.meta}
+                      </span>
+                    </div>
+                    <p className="text-sm leading-relaxed text-white/65">{stream.description}</p>
+                    <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/10">
+                      <div
+                        className={`h-full rounded-full bg-gradient-to-r ${stream.accent}`}
+                        style={{ width: `${stream.fill}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -115,6 +126,24 @@ export default function DataVisualization() {
               <div className="relative space-y-2">
                 <p className="text-[0.65rem] uppercase tracking-[0.4em] text-white/45">{tile.title}</p>
                 <p className="text-2xl font-semibold text-white">{tile.metric}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {snapshotTiles.map((tile, index) => (
+            <div
+              key={tile.title}
+              className="relative overflow-hidden rounded-[26px] border border-white/10 bg-black/55 p-5 text-left shadow-[0_16px_50px_rgba(6,12,26,0.45)] transition duration-500 ease-out hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_24px_65px_rgba(8,14,32,0.55)] opacity-0 animate-fade-in-up"
+              style={{ animationDelay: `${420 + index * 140}ms` }}
+            >
+              <div className={`pointer-events-none absolute inset-0 rounded-[26px] bg-gradient-to-br ${tile.accent}`} aria-hidden="true" />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.1),transparent_70%)]" aria-hidden="true" />
+              <div className="relative space-y-2">
+                <p className="text-[0.7rem] uppercase tracking-[0.35em] text-white/45">{tile.title}</p>
+                <p className="text-3xl font-semibold text-white">{tile.metric}</p>
+                <p className="text-sm text-white/65">{tile.detail}</p>
               </div>
             </div>
           ))}
