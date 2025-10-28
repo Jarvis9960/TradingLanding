@@ -68,8 +68,8 @@ export default function IntelligenceSection() {
           </div>
         </div>
 
-        <div className="grid gap-14 lg:grid-cols-12">
-          <div className="space-y-10 lg:col-span-5">
+        <div className="flex flex-col gap-14">
+          <div className="space-y-10">
             <div className="grid gap-6 sm:grid-cols-2">
               {metricHighlights.map((metric, index) => (
                 <article
@@ -91,7 +91,7 @@ export default function IntelligenceSection() {
             </div>
           </div>
 
-          <div className="lg:col-span-7">
+          <div className="w-full">
             <DataVisualization />
           </div>
         </div>
