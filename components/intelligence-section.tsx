@@ -1,9 +1,10 @@
 'use client'
 
-import { type CSSProperties, useRef } from "react"
+import { type CSSProperties, useMemo, useRef } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 
 import DataVisualization from "./data-visualization"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 type MetricHighlight = {
   value: string
@@ -109,13 +110,16 @@ const sectionVariants = {
 export default function IntelligenceSection() {
   const prefersReducedMotion = useReducedMotion()
   const sectionRef = useRef<HTMLElement>(null)
+  const isMobile = useIsMobile()
+  const shouldAnimate = useMemo(() => !(prefersReducedMotion || isMobile), [prefersReducedMotion, isMobile])
 
   return (
     <motion.section
       ref={sectionRef}
       variants={sectionVariants}
-      initial={prefersReducedMotion ? "visible" : "hidden"}
-      whileInView="visible"
+      initial={shouldAnimate ? "hidden" : "visible"}
+      whileInView={shouldAnimate ? "visible" : undefined}
+      animate={shouldAnimate ? undefined : "visible"}
       viewport={{ once: true, amount: 0.35 }}
       className="relative z-10 overflow-hidden px-6 py-28 text-white md:px-10"
     >
@@ -133,29 +137,31 @@ export default function IntelligenceSection() {
       />
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute inset-0 bg-[conic-gradient(from_120deg_at_50%_30%,rgba(96,165,250,0.12),rgba(14,116,144,0.05),rgba(56,189,248,0.12),rgba(96,165,250,0.12))] opacity-80 blur-[140px] mix-blend-screen animate-aurora" />
+        <div
+          className={`absolute inset-0 bg-[conic-gradient(from_120deg_at_50%_30%,rgba(96,165,250,0.12),rgba(14,116,144,0.05),rgba(56,189,248,0.12),rgba(96,165,250,0.12))] opacity-80 blur-[140px] mix-blend-screen ${shouldAnimate ? "animate-aurora" : ""}`}
+        />
         {accentFlares.map((flare, index) => (
           <motion.span
             key={`${flare.top}-${index}`}
             className={`pointer-events-none absolute rounded-full bg-gradient-to-br ${flare.gradient} opacity-50 blur-3xl mix-blend-screen`}
             style={{ top: flare.top, left: flare.left, width: flare.size, height: flare.size } as CSSProperties}
-            animate={{ opacity: [0.25, 0.55, 0.25], scale: [1, 1.08, 0.98] }}
-            transition={{ duration: 11 + index * 2, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+            animate={shouldAnimate ? { opacity: [0.25, 0.55, 0.25], scale: [1, 1.08, 0.98] } : undefined}
+            transition={shouldAnimate ? { duration: 11 + index * 2, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" } : undefined}
           />
         ))}
         <motion.div
           className="absolute inset-x-0 top-[24%] flex justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0.15, 0.4, 0.15] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+          initial={shouldAnimate ? { opacity: 0 } : { opacity: 0.25 }}
+          animate={shouldAnimate ? { opacity: [0.15, 0.4, 0.15] } : undefined}
+          transition={shouldAnimate ? { duration: 9, repeat: Infinity, ease: "easeInOut" } : undefined}
         >
           <div className="h-px w-4/5 max-w-5xl bg-gradient-to-r from-transparent via-white/35 to-transparent" />
         </motion.div>
         <motion.div
           className="absolute inset-x-10 bottom-[12%] flex justify-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0.18, 0.45, 0.18] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+          initial={shouldAnimate ? { opacity: 0 } : { opacity: 0.3 }}
+          animate={shouldAnimate ? { opacity: [0.18, 0.45, 0.18] } : undefined}
+          transition={shouldAnimate ? { duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1.2 } : undefined}
         >
           <div className="h-px w-full max-w-4xl bg-gradient-to-r from-transparent via-cyan-200/40 to-transparent" />
         </motion.div>
@@ -164,7 +170,9 @@ export default function IntelligenceSection() {
       <div className="relative z-10 mx-auto max-w-6xl space-y-16">
         <motion.div variants={headingVariants} className="mx-auto max-w-3xl space-y-6 text-center">
           <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-6 py-2 text-[0.7rem] uppercase tracking-[0.55em] text-white/60 shadow-[0_15px_45px_rgba(4,9,18,0.5)] backdrop-blur-xl">
-            <span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.6)] animate-pulse-glow" />
+            <span
+              className={`h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.6)] ${shouldAnimate ? "animate-pulse-glow" : ""}`}
+            />
             Precision Stack
             <span className="hidden text-[0.65rem] tracking-[0.45em] text-white/35 sm:inline">Signal · Liquidity · Risk</span>
           </div>
@@ -195,8 +203,8 @@ export default function IntelligenceSection() {
                   <div className={`pointer-events-none absolute inset-0 bg-gradient-to-r ${metric.accent} opacity-[0.11] mix-blend-screen`} aria-hidden="true" />
                   <motion.div
                     className="pointer-events-none absolute -inset-px rounded-[28px] border border-white/5 opacity-0"
-                    animate={{ opacity: [0, 0.35, 0] }}
-                    transition={{ duration: 6 + index, repeat: Infinity, delay: index * 0.6, ease: "easeInOut" }}
+                    animate={shouldAnimate ? { opacity: [0, 0.35, 0] } : undefined}
+                    transition={shouldAnimate ? { duration: 6 + index, repeat: Infinity, delay: index * 0.6, ease: "easeInOut" } : undefined}
                   />
                   <div className="relative space-y-3 text-left">
                     <div className="flex items-baseline justify-between gap-3">
@@ -214,8 +222,14 @@ export default function IntelligenceSection() {
             variants={headingVariants}
             className="relative w-full overflow-hidden rounded-[30px] border border-white/10 bg-black/40 shadow-[0_25px_80px_rgba(4,9,18,0.55)] backdrop-blur-2xl"
           >
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 animate-shimmer" aria-hidden="true" />
-            <div className="pointer-events-none absolute -inset-px bg-gradient-to-r from-[#22d3ee]/25 via-transparent to-[#818cf8]/25 opacity-40 mix-blend-screen animate-gradient-flow" aria-hidden="true" />
+            <div
+              className={`pointer-events-none absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 ${shouldAnimate ? "animate-shimmer" : ""}`}
+              aria-hidden="true"
+            />
+            <div
+              className={`pointer-events-none absolute -inset-px bg-gradient-to-r from-[#22d3ee]/25 via-transparent to-[#818cf8]/25 opacity-40 mix-blend-screen ${shouldAnimate ? "animate-gradient-flow" : ""}`}
+              aria-hidden="true"
+            />
             <div className="relative">
               <DataVisualization />
             </div>
