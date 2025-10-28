@@ -1,7 +1,7 @@
 'use client'
 
 import type { CSSProperties } from "react"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 
 import DataVisualization from "./data-visualization"
 
@@ -107,10 +107,12 @@ const sectionVariants = {
 }
 
 export default function IntelligenceSection() {
+  const prefersReducedMotion = useReducedMotion()
+
   return (
     <motion.section
       variants={sectionVariants}
-      initial="hidden"
+      initial={prefersReducedMotion ? "visible" : "hidden"}
       whileInView="visible"
       viewport={{ once: true, amount: 0.35 }}
       className="relative z-10 overflow-hidden px-6 py-28 text-white md:px-10"
@@ -157,7 +159,7 @@ export default function IntelligenceSection() {
         </motion.div>
       </div>
 
-      <div className="relative mx-auto max-w-6xl space-y-16">
+      <div className="relative z-10 mx-auto max-w-6xl space-y-16">
         <motion.div variants={headingVariants} className="mx-auto max-w-3xl space-y-6 text-center">
           <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-6 py-2 text-[0.7rem] uppercase tracking-[0.55em] text-white/60 shadow-[0_15px_45px_rgba(4,9,18,0.5)] backdrop-blur-xl">
             <span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.6)] animate-pulse-glow" />
