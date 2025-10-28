@@ -111,6 +111,7 @@ export default function IntelligenceSection() {
 
   return (
     <motion.section
+      ref={sectionRef}
       variants={sectionVariants}
       initial={prefersReducedMotion ? "visible" : "hidden"}
       whileInView="visible"
