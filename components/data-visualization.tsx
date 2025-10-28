@@ -13,7 +13,7 @@ const insights = [
   {
     value: "<50ms",
     label: "Execution Speed",
-    detail: "Hyper-optimized routing with predictive load balancing.",
+    detail: "Hyper-optimised routing with predictive load balancing.",
   },
   {
     value: "24/7",
@@ -26,39 +26,29 @@ export default function DataVisualization() {
   const circumference = (radius: number) => 2 * Math.PI * radius
 
   return (
-    <div className="glass-strong group relative overflow-hidden rounded-[28px] p-10">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,#f6d47d1f,transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 opacity-50" style={{
-        backgroundImage:
-          "radial-gradient(circle at 20% 20%, rgba(246,212,125,0.25), transparent 60%)," +
-          "radial-gradient(circle at 80% 15%, rgba(169,125,255,0.2), transparent 55%)," +
-          "radial-gradient(circle at 50% 80%, rgba(96,239,255,0.18), transparent 65%)",
-      }} />
+    <div className="group relative overflow-hidden rounded-[32px] border border-white/10 bg-[#0b1120] p-10 shadow-[0_24px_80px_rgba(7,11,25,0.45)]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(103,233,255,0.12),transparent_70%)]" />
+      <div className="pointer-events-none absolute inset-0 border border-white/10" />
 
-      <div className="relative z-10 flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
-        <div className="mx-auto w-full max-w-sm">
-          <div className="relative aspect-square">
-            <div className="absolute inset-10 rounded-full border border-white/10 blur-xl" />
-            <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.18),rgba(6,10,25,0.6))]" />
+      <div className="relative z-10 flex flex-col gap-12 lg:flex-row lg:items-center lg:justify-between">
+        <div className="relative mx-auto w-full max-w-sm">
+          <div className="relative aspect-square overflow-hidden rounded-full border border-white/10 bg-[#101a2f]">
             <div className="absolute inset-6 rounded-full border border-white/10" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex flex-col items-center text-center">
-                <span className="text-sm uppercase tracking-[0.4em] text-white/50">Orbit Sync</span>
-                <span className="mt-2 text-4xl font-semibold text-white md:text-5xl">Signal Core</span>
-                <p className="mt-3 max-w-[14rem] text-xs text-white/60">
-                  Multi-layer observability that adapts to volatility in milliseconds.
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_70%)]" />
+            <div className="absolute inset-0 flex items-center justify-center text-center px-10">
+              <div className="space-y-2">
+                <span className="text-xs uppercase tracking-[0.45em] text-white/50">Signal Core</span>
+                <h3 className="text-4xl font-semibold text-white md:text-5xl">Orbit Sync</h3>
+                <p className="text-sm text-white/65">
+                  The monitoring nucleus aligning machine foresight with human oversight in under 50ms.
                 </p>
               </div>
             </div>
 
-            <svg
-              className="absolute inset-0 h-full w-full text-white/20"
-              viewBox="0 0 320 320"
-              fill="none"
-            >
-              <circle cx="160" cy="160" r="144" stroke="currentColor" strokeDasharray="6 12" strokeOpacity="0.2" />
-              <circle cx="160" cy="160" r="112" stroke="currentColor" strokeOpacity="0.1" />
-              <circle cx="160" cy="160" r="84" stroke="currentColor" strokeOpacity="0.1" />
+            <svg className="absolute inset-0 h-full w-full text-white/15" viewBox="0 0 320 320" fill="none">
+              <circle cx="160" cy="160" r="144" stroke="currentColor" strokeDasharray="2 10" strokeOpacity="0.25" />
+              <circle cx="160" cy="160" r="112" stroke="currentColor" strokeOpacity="0.12" />
+              <circle cx="160" cy="160" r="84" stroke="currentColor" strokeOpacity="0.12" />
               {rings.map(({ radius, value, color }, index) => {
                 const c = circumference(radius)
                 return (
@@ -68,36 +58,52 @@ export default function DataVisualization() {
                     cy="160"
                     r={radius}
                     stroke={color}
-                    strokeWidth={index === 0 ? 8 : 6}
+                    strokeWidth={index === 0 ? 6 : 4}
                     strokeLinecap="round"
                     strokeDasharray={`${c * value} ${c}`}
-                    strokeDashoffset={-c * (0.15 * index)}
+                    strokeDashoffset={-c * (0.22 * index)}
                     transform="rotate(-90 160 160)"
-                    opacity={0.9 - index * 0.2}
+                    opacity={0.9 - index * 0.22}
                   />
                 )
               })}
             </svg>
 
-            <div className="absolute inset-0 animate-pulse rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.08),transparent_60%)]" />
-            <div className="absolute inset-0 rounded-full border border-white/10" />
+            <div className="absolute top-6 left-6 flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-3 py-1 text-[0.65rem] uppercase tracking-[0.35em] text-white/60">
+              Live feed
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-300" />
+            </div>
+            <div className="absolute bottom-6 right-6 rounded-2xl border border-white/10 bg-black/70 px-4 py-3 text-left">
+              <p className="text-[0.65rem] uppercase tracking-[0.4em] text-white/40">Variance</p>
+              <p className="mt-1 text-lg font-semibold text-white">0.13% drawdown</p>
+              <p className="text-xs text-white/50">last 30 sessions</p>
+            </div>
           </div>
         </div>
 
-        <div className="grid w-full gap-6 sm:grid-cols-3">
-          {insights.map((item) => (
-            <div
-              key={item.label}
-              className="relative overflow-hidden rounded-3xl border border-white/5 bg-white/5 p-5 shadow-[0_12px_48px_rgba(5,6,18,0.45)] backdrop-blur"
-            >
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              <div className="relative space-y-3">
-                <span className="text-3xl font-semibold text-white md:text-4xl">{item.value}</span>
-                <span className="block text-xs font-semibold uppercase tracking-[0.35em] text-white/70">{item.label}</span>
-                <p className="text-sm text-white/60">{item.detail}</p>
+        <div className="flex w-full flex-col gap-6">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+            <p className="text-xs uppercase tracking-[0.45em] text-white/60">Telemetry Snapshot</p>
+            <p className="mt-3 text-sm text-white/65">
+              Execution diagnostics surface variance, flow health, and counterparty posture continuously so intervention stays proactive instead of reactive.
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            {insights.map((item) => (
+              <div
+                key={item.label}
+                className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/60 p-5 shadow-[0_16px_50px_rgba(8,12,28,0.4)]"
+              >
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(103,233,255,0.18),transparent_70%)] opacity-0 transition-opacity duration-300 hover:opacity-100" />
+                <div className="relative space-y-3">
+                  <span className="text-3xl font-semibold text-white md:text-4xl">{item.value}</span>
+                  <span className="block text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-white/70">{item.label}</span>
+                  <p className="text-sm text-white/60">{item.detail}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
