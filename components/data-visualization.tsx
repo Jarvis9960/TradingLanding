@@ -107,8 +107,28 @@ export default function DataVisualization() {
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="mt-5 h-1 overflow-hidden rounded-full bg-white/10">
+                <div className={`h-full rounded-full bg-gradient-to-r ${stream.accent}`} style={{ width: `${stream.fill}%` }} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {microTiles.map((tile, index) => (
+            <div
+              key={tile.title}
+              className="relative overflow-hidden rounded-[26px] border border-white/10 bg-black/55 p-5 text-left shadow-[0_16px_50px_rgba(6,12,26,0.45)] transition duration-500 ease-out hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_24px_65px_rgba(8,14,32,0.55)] opacity-0 animate-fade-in-up"
+              style={{ animationDelay: `${360 + index * 110}ms` }}
+            >
+              <div className={`pointer-events-none absolute inset-0 rounded-[26px] bg-gradient-to-br ${tile.accent}`} aria-hidden="true" />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.1),transparent_70%)]" aria-hidden="true" />
+              <div className="relative space-y-2">
+                <p className="text-[0.65rem] uppercase tracking-[0.4em] text-white/45">{tile.title}</p>
+                <p className="text-2xl font-semibold text-white">{tile.metric}</p>
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">

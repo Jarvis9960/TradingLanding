@@ -58,6 +58,12 @@ const capabilities: Capability[] = [
   },
 ]
 
+const rhythmBeats = [
+  { title: "Pulse", value: "steady", accent: "from-[#f8c660]/25 via-transparent to-transparent" },
+  { title: "Spread", value: "tight", accent: "from-[#67e9ff]/25 via-transparent to-transparent" },
+  { title: "Flow", value: "balanced", accent: "from-[#6fffd6]/25 via-transparent to-transparent" },
+]
+
 export default function IntelligenceSection() {
   return (
     <section className="relative z-10 overflow-hidden px-6 py-28 text-white md:px-10">
