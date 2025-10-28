@@ -27,34 +27,34 @@ type Particle = {
 
 const BASE_LAYERS: LayerConfig[] = [
   {
-    count: 14,
-    size: [0.6, 1.1],
-    speedY: [0.028, 0.08],
-    speedX: [-0.03, 0.03],
-    opacity: [0.2, 0.34],
-    blur: 2,
-    parallax: 0.032,
-    pointer: 0.003,
+    count: 22,
+    size: [0.6, 1.2],
+    speedY: [0.035, 0.12],
+    speedX: [-0.035, 0.035],
+    opacity: [0.25, 0.38],
+    blur: 2.2,
+    parallax: 0.04,
+    pointer: 0.004,
   },
   {
-    count: 18,
-    size: [0.85, 1.6],
-    speedY: [0.045, 0.14],
-    speedX: [-0.05, 0.05],
-    opacity: [0.22, 0.36],
-    blur: 1.1,
-    parallax: 0.075,
-    pointer: 0.006,
-  },
-  {
-    count: 20,
-    size: [1.1, 1.9],
-    speedY: [0.065, 0.18],
-    speedX: [-0.065, 0.065],
-    opacity: [0.28, 0.48],
-    blur: 0.35,
-    parallax: 0.1,
+    count: 28,
+    size: [0.9, 1.8],
+    speedY: [0.06, 0.18],
+    speedX: [-0.06, 0.06],
+    opacity: [0.25, 0.42],
+    blur: 1.2,
+    parallax: 0.09,
     pointer: 0.008,
+  },
+  {
+    count: 32,
+    size: [1.2, 2.2],
+    speedY: [0.09, 0.24],
+    speedX: [-0.09, 0.09],
+    opacity: [0.32, 0.55],
+    blur: 0.4,
+    parallax: 0.12,
+    pointer: 0.01,
   },
 ]
 
@@ -75,7 +75,7 @@ export default function ParticleBackground() {
     let particles: Particle[] = []
     let animationFrameId: number
     let lastFrameTime = 0
-    const FRAME_INTERVAL = 1000 / 24
+    const FRAME_INTERVAL = 1000 / 30
     let width = 0
     let height = 0
     let activeLayers: LayerConfig[] = []
@@ -230,7 +230,7 @@ export default function ParticleBackground() {
       animationFrameId = requestAnimationFrame(animate)
 
       const delta = now - lastFrameTime
-      if (delta < FRAME_INTERVAL || document.hidden || !shouldRender) {
+      if (delta < FRAME_INTERVAL || document.hidden) {
         return
       }
       lastFrameTime = now
@@ -276,7 +276,6 @@ export default function ParticleBackground() {
     }
 
     resizeCanvas()
-    updateRenderState()
     animationFrameId = requestAnimationFrame(animate)
 
     window.addEventListener("resize", resizeCanvas)
