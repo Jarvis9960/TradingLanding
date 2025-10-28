@@ -27,34 +27,34 @@ type Particle = {
 
 const BASE_LAYERS: LayerConfig[] = [
   {
-    count: 22,
-    size: [0.6, 1.2],
-    speedY: [0.035, 0.12],
-    speedX: [-0.035, 0.035],
-    opacity: [0.25, 0.38],
-    blur: 2.2,
-    parallax: 0.04,
-    pointer: 0.004,
+    count: 12,
+    size: [0.6, 1.1],
+    speedY: [0.02, 0.08],
+    speedX: [-0.02, 0.02],
+    opacity: [0.2, 0.32],
+    blur: 1.8,
+    parallax: 0.03,
+    pointer: 0.003,
   },
   {
-    count: 28,
-    size: [0.9, 1.8],
-    speedY: [0.06, 0.18],
+    count: 16,
+    size: [0.85, 1.6],
+    speedY: [0.04, 0.12],
+    speedX: [-0.04, 0.04],
+    opacity: [0.22, 0.36],
+    blur: 1,
+    parallax: 0.06,
+    pointer: 0.006,
+  },
+  {
+    count: 20,
+    size: [1.1, 2],
+    speedY: [0.06, 0.16],
     speedX: [-0.06, 0.06],
-    opacity: [0.25, 0.42],
-    blur: 1.2,
-    parallax: 0.09,
+    opacity: [0.28, 0.45],
+    blur: 0.35,
+    parallax: 0.08,
     pointer: 0.008,
-  },
-  {
-    count: 32,
-    size: [1.2, 2.2],
-    speedY: [0.09, 0.24],
-    speedX: [-0.09, 0.09],
-    opacity: [0.32, 0.55],
-    blur: 0.4,
-    parallax: 0.12,
-    pointer: 0.01,
   },
 ]
 
@@ -75,10 +75,12 @@ export default function ParticleBackground() {
     let particles: Particle[] = []
     let animationFrameId: number
     let lastFrameTime = 0
-    const FRAME_INTERVAL = 1000 / 30
+    const FRAME_INTERVAL = 1000 / 24
     let width = 0
     let height = 0
     let activeLayers: LayerConfig[] = []
+    let isHeroVisible = true
+    const observerCleanup: (() => void)[] = []
 
     const pointer = {
       x: window.innerWidth / 2,
@@ -93,7 +95,7 @@ export default function ParticleBackground() {
     const computeEnvironment = () => {
       const prefersReducedMotion = motionQuery.matches
       const currentWidth = window.innerWidth
-      const isTabletOrBelow = currentWidth < 1024
+      const isTabletOrBelow = currentWidth < 1280
       const isMobile = currentWidth < 768
 
       if (prefersReducedMotion || isTabletOrBelow) {
@@ -104,9 +106,9 @@ export default function ParticleBackground() {
         }
       }
 
-      const densityScale = currentWidth < 1440 ? 0.7 : 1
-      const speedScale = currentWidth < 1440 ? 0.85 : 1
-      const pointerScale = currentWidth < 1440 ? 0.65 : 1
+      const densityScale = currentWidth < 1600 ? 0.65 : 1
+      const speedScale = currentWidth < 1600 ? 0.8 : 1
+      const pointerScale = currentWidth < 1600 ? 0.6 : 1
 
       return {
         shouldAnimate: true,
@@ -189,7 +191,7 @@ export default function ParticleBackground() {
         return
       }
 
-      const ratio = Math.min(window.devicePixelRatio || 1, 1.5)
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.25)
       canvas.width = width * ratio
       canvas.height = height * ratio
       canvas.style.width = `${width}px`
@@ -211,19 +213,8 @@ export default function ParticleBackground() {
       pointer.targetY = height / 2
     }
 
-    const updateRenderState = () => {
-      const withinHeroBounds = scroll.value < height * 1.15
-      if (withinHeroBounds !== shouldRender) {
-        shouldRender = withinHeroBounds
-        if (!shouldRender) {
-          ctx.clearRect(0, 0, width, height)
-        }
-      }
-    }
-
     const handleScroll = () => {
       scroll.value = window.scrollY
-      updateRenderState()
     }
 
     const animate = (now: number) => {
@@ -234,6 +225,13 @@ export default function ParticleBackground() {
         return
       }
       lastFrameTime = now
+
+      if (!shouldRender || !isHeroVisible) {
+        if (shouldRender && !isHeroVisible) {
+          ctx.clearRect(0, 0, width, height)
+        }
+        return
+      }
 
       pointer.x += (pointer.targetX - pointer.x) * 0.08
       pointer.y += (pointer.targetY - pointer.y) * 0.08
@@ -282,10 +280,33 @@ export default function ParticleBackground() {
     window.addEventListener("pointermove", handlePointerMove)
     window.addEventListener("pointerleave", handlePointerLeave)
     window.addEventListener("scroll", handleScroll, { passive: true })
+    const heroSection = document.querySelector("[data-hero-section]")
+    if (heroSection) {
+      const heroObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            isHeroVisible = entry.isIntersecting
+            if (!isHeroVisible) {
+              ctx.clearRect(0, 0, width, height)
+            } else {
+              lastFrameTime = performance.now()
+            }
+          })
+        },
+        { threshold: 0.1 },
+      )
+      heroObserver.observe(heroSection)
+      observerCleanup.push(() => heroObserver.disconnect())
+    }
     const handlePreferenceChange = () => {
+      const wasAnimating = shouldRender
       const shouldAnimate = syncEnvironment()
       if (shouldAnimate) {
         resizeCanvas()
+        if (!wasAnimating) {
+          lastFrameTime = performance.now()
+          animationFrameId = requestAnimationFrame(animate)
+        }
       }
     }
     if (motionQuery.addEventListener) {
@@ -300,6 +321,7 @@ export default function ParticleBackground() {
       window.removeEventListener("pointermove", handlePointerMove)
       window.removeEventListener("pointerleave", handlePointerLeave)
       window.removeEventListener("scroll", handleScroll)
+      observerCleanup.forEach((cleanup) => cleanup())
       if (motionQuery.removeEventListener) {
         motionQuery.removeEventListener("change", handlePreferenceChange)
       } else {

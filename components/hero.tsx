@@ -16,8 +16,8 @@ export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
   const sceneRef = useRef<HTMLDivElement>(null)
   const [allowParallax, setAllowParallax] = useState(false)
-  const [showDynamicBackground, setShowDynamicBackground] = useState(true)
-  const [showVideoBackground, setShowVideoBackground] = useState(true)
+  const [showDynamicBackground, setShowDynamicBackground] = useState(false)
+  const [showVideoBackground, setShowVideoBackground] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -44,9 +44,9 @@ export default function Hero() {
     const updateEnvironment = () => {
       const prefersReducedMotion = motionQuery.matches
       const viewportWidth = window.innerWidth
-      const canUseParallax = !prefersReducedMotion && viewportWidth >= 1024
-      const shouldShowDynamicBackground = !prefersReducedMotion
-      const shouldShowVideo = !prefersReducedMotion && viewportWidth >= 1024
+      const canUseParallax = !prefersReducedMotion && viewportWidth >= 1280
+      const shouldShowDynamicBackground = !prefersReducedMotion && viewportWidth >= 1280
+      const shouldShowVideo = !prefersReducedMotion && viewportWidth >= 1440
 
       setAllowParallax(canUseParallax)
       setShowDynamicBackground(shouldShowDynamicBackground)
@@ -100,6 +100,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       className="relative z-10 flex min-h-screen flex-col items-center overflow-hidden bg-[#020203] px-4 pb-16 pt-12 text-white opacity-0"
+      data-hero-section
     >
       <div className="pointer-events-none absolute inset-0">
         <div
@@ -130,7 +131,7 @@ export default function Hero() {
                 muted
                 loop
                 playsInline
-                preload="auto"
+                preload="metadata"
                 aria-hidden="true"
               >
                 <source src="/earth-background.mp4" type="video/mp4" />
@@ -161,17 +162,18 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="absolute left-1/2 top-1/2 hidden h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2 lg:block">
-          <div className="absolute inset-0 motion-safe:animate-[spin_28s_linear_infinite] rounded-full border border-white/10 bg-[radial-gradient(circle,_rgba(255,255,255,0.08)_0%,_rgba(246,212,125,0.18)_35%,_rgba(19,14,4,0)_72%)] opacity-40 blur-[50px] mix-blend-screen" />
-          <div className="absolute inset-10 motion-safe:animate-[spin_32s_linear_infinite_reverse] rounded-full bg-[conic-gradient(from_120deg_at_50%_50%,rgba(246,212,125,0)_0deg,rgba(246,212,125,0.2)_120deg,rgba(38,24,8,0)_260deg)] opacity-45 blur-[60px] mix-blend-screen" />
-        </div>
+        {showDynamicBackground && (
+          <>
+            <div className="absolute left-1/2 top-1/2 hidden h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2 lg:block">
+              <div className="absolute inset-0 rounded-full border border-white/10 bg-[radial-gradient(circle,_rgba(255,255,255,0.08)_0%,_rgba(246,212,125,0.18)_35%,_rgba(19,14,4,0)_72%)] opacity-30 blur-[50px] mix-blend-screen" />
+              <div className="absolute inset-10 rounded-full bg-[conic-gradient(from_120deg_at_50%_50%,rgba(246,212,125,0)_0deg,rgba(246,212,125,0.2)_120deg,rgba(38,24,8,0)_260deg)] opacity-35 blur-[60px] mix-blend-screen" />
+            </div>
 
-        <div className="absolute left-[18%] bottom-[18%] h-4 w-4 rounded-full bg-[#f6d47d]/70 shadow-[0_0_30px_10px_rgba(246,212,125,0.32)] motion-safe:animate-[ping_5s_linear_infinite]" />
-        <div className="absolute right-[20%] top-[48%] h-3 w-3 rounded-full bg-white/70 shadow-[0_0_24px_10px_rgba(162,140,255,0.28)] motion-safe:animate-[ping_7s_linear_infinite]" />
-        <div
-          className="absolute left-[36%] top-[62%] h-2.5 w-2.5 rounded-full bg-[#b6a0ff]/60 shadow-[0_0_20px_6px_rgba(150,116,255,0.28)] motion-safe:animate-[ping_6s_linear_infinite]"
-          style={{ animationDelay: "1.2s" }}
-        />
+            <div className="absolute left-[18%] bottom-[18%] h-4 w-4 rounded-full bg-[#f6d47d]/60 shadow-[0_0_22px_8px_rgba(246,212,125,0.25)]" />
+            <div className="absolute right-[20%] top-[48%] h-3 w-3 rounded-full bg-white/60 shadow-[0_0_18px_6px_rgba(162,140,255,0.2)]" />
+            <div className="absolute left-[36%] top-[62%] h-2.5 w-2.5 rounded-full bg-[#b6a0ff]/50 shadow-[0_0_16px_5px_rgba(150,116,255,0.22)]" />
+          </>
+        )}
       </div>
 
       <div className="relative z-20 mx-auto flex w-full max-w-6xl items-center justify-between rounded-full border border-white/5 bg-white/5 px-4 py-2 backdrop-blur">
@@ -229,15 +231,12 @@ export default function Hero() {
         >
           <Link href="https://app.tradingwala.co.in/" className="flex items-center gap-3">
             <span>Join the Revolutions</span>
-            <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1 motion-safe:animate-pulse" strokeWidth={2.6} />
+            <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={2.6} />
           </Link>
         </Button>
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent via-[#020203]/80 to-[#020203]" />
-      <div className="absolute left-1/4 top-1/3 h-3 w-3 rounded-full bg-[#d4af37] opacity-80 blur-[1px] motion-safe:animate-float" />
-      <div className="absolute right-1/4 top-1/2 h-4 w-4 rounded-full bg-white/80 opacity-80 blur-[1px] motion-safe:animate-float" style={{ animationDelay: "1s" }} />
-      <div className="absolute left-1/2 bottom-1/4 h-2.5 w-2.5 rounded-full bg-[#d4af37] opacity-70 blur-[1px] motion-safe:animate-float" style={{ animationDelay: "1.6s" }} />
     </section>
   )
 }
