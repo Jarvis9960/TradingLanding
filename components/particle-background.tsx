@@ -27,34 +27,34 @@ type Particle = {
 
 const BASE_LAYERS: LayerConfig[] = [
   {
-    count: 45,
-    size: [0.4, 1.1],
-    speedY: [0.05, 0.18],
+    count: 14,
+    size: [0.6, 1.1],
+    speedY: [0.028, 0.08],
+    speedX: [-0.03, 0.03],
+    opacity: [0.2, 0.34],
+    blur: 2,
+    parallax: 0.032,
+    pointer: 0.003,
+  },
+  {
+    count: 18,
+    size: [0.85, 1.6],
+    speedY: [0.045, 0.14],
     speedX: [-0.05, 0.05],
-    opacity: [0.25, 0.4],
-    blur: 3,
-    parallax: 0.05,
+    opacity: [0.22, 0.36],
+    blur: 1.1,
+    parallax: 0.075,
     pointer: 0.006,
   },
   {
-    count: 60,
-    size: [0.9, 1.8],
-    speedY: [0.08, 0.24],
-    speedX: [-0.08, 0.08],
-    opacity: [0.25, 0.45],
-    blur: 1.5,
-    parallax: 0.12,
-    pointer: 0.01,
-  },
-  {
-    count: 70,
-    size: [1.2, 2.6],
-    speedY: [0.12, 0.32],
-    speedX: [-0.12, 0.12],
-    opacity: [0.35, 0.6],
-    blur: 0.4,
-    parallax: 0.18,
-    pointer: 0.014,
+    count: 20,
+    size: [1.1, 1.9],
+    speedY: [0.065, 0.18],
+    speedX: [-0.065, 0.065],
+    opacity: [0.28, 0.48],
+    blur: 0.35,
+    parallax: 0.1,
+    pointer: 0.008,
   },
 ]
 
@@ -74,6 +74,8 @@ export default function ParticleBackground() {
 
     let particles: Particle[] = []
     let animationFrameId: number
+    let lastFrameTime = 0
+    const FRAME_INTERVAL = 1000 / 24
     let width = 0
     let height = 0
     let activeLayers: LayerConfig[] = []
@@ -86,13 +88,15 @@ export default function ParticleBackground() {
     }
 
     const scroll = { value: window.scrollY }
+    let shouldRender = true
 
     const computeEnvironment = () => {
       const prefersReducedMotion = motionQuery.matches
       const currentWidth = window.innerWidth
+      const isTabletOrBelow = currentWidth < 1024
       const isMobile = currentWidth < 768
 
-      if (prefersReducedMotion) {
+      if (prefersReducedMotion || isTabletOrBelow) {
         return {
           shouldAnimate: false,
           layers: [] as LayerConfig[],
@@ -100,9 +104,9 @@ export default function ParticleBackground() {
         }
       }
 
-      const densityScale = isMobile ? 0.45 : 1
-      const speedScale = isMobile ? 0.75 : 1
-      const pointerScale = isMobile ? 0.35 : 1
+      const densityScale = currentWidth < 1440 ? 0.7 : 1
+      const speedScale = currentWidth < 1440 ? 0.85 : 1
+      const pointerScale = currentWidth < 1440 ? 0.65 : 1
 
       return {
         shouldAnimate: true,
@@ -130,6 +134,7 @@ export default function ParticleBackground() {
       activeLayers = env.layers
 
       if (!env.shouldAnimate) {
+        shouldRender = false
         cancelAnimationFrame(animationFrameId)
         ctx.clearRect(0, 0, width, height)
         canvas.style.display = "none"
@@ -138,6 +143,7 @@ export default function ParticleBackground() {
       }
 
       canvas.style.display = ""
+      shouldRender = true
       return true
     }
 
@@ -179,9 +185,11 @@ export default function ParticleBackground() {
     const resizeCanvas = () => {
       width = window.innerWidth
       height = window.innerHeight
-      syncEnvironment()
+      if (!syncEnvironment()) {
+        return
+      }
 
-      const ratio = window.devicePixelRatio || 1
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5)
       canvas.width = width * ratio
       canvas.height = height * ratio
       canvas.style.width = `${width}px`
@@ -203,17 +211,34 @@ export default function ParticleBackground() {
       pointer.targetY = height / 2
     }
 
-    const handleScroll = () => {
-      scroll.value = window.scrollY
+    const updateRenderState = () => {
+      const withinHeroBounds = scroll.value < height * 1.15
+      if (withinHeroBounds !== shouldRender) {
+        shouldRender = withinHeroBounds
+        if (!shouldRender) {
+          ctx.clearRect(0, 0, width, height)
+        }
+      }
     }
 
-    const animate = () => {
+    const handleScroll = () => {
+      scroll.value = window.scrollY
+      updateRenderState()
+    }
+
+    const animate = (now: number) => {
       animationFrameId = requestAnimationFrame(animate)
+
+      const delta = now - lastFrameTime
+      if (delta < FRAME_INTERVAL || document.hidden || !shouldRender) {
+        return
+      }
+      lastFrameTime = now
 
       pointer.x += (pointer.targetX - pointer.x) * 0.08
       pointer.y += (pointer.targetY - pointer.y) * 0.08
 
-      ctx.fillStyle = "rgba(3, 7, 18, 0.08)"
+      ctx.fillStyle = "rgba(3, 7, 18, 0.1)"
       ctx.fillRect(0, 0, width, height)
 
       particles.forEach((particle) => {
@@ -239,19 +264,20 @@ export default function ParticleBackground() {
         particle.y -= particle.speedY
         particle.x += particle.speedX + pointerOffsetX * 0.05
 
-        if (particle.y + parallaxOffset < -20) {
-          particle.y = height + 20 - parallaxOffset
+        if (particle.y + parallaxOffset < -12) {
+          particle.y = height + 12 - parallaxOffset
           particle.x = Math.random() * width
         }
 
-        if (particle.x < -20 || particle.x > width + 20) {
-          particle.x = particle.x < 0 ? width + 20 : -20
+        if (particle.x < -12 || particle.x > width + 12) {
+          particle.x = particle.x < 0 ? width + 12 : -12
         }
       })
     }
 
     resizeCanvas()
-    animate()
+    updateRenderState()
+    animationFrameId = requestAnimationFrame(animate)
 
     window.addEventListener("resize", resizeCanvas)
     window.addEventListener("pointermove", handlePointerMove)

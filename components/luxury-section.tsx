@@ -53,9 +53,9 @@ export default function LuxurySection() {
     <section ref={sectionRef} className="relative z-10 overflow-hidden py-32 px-4 md:px-8">
       <div className="absolute inset-0 bg-gradient-to-br from-black via-[#0a0a0a] to-black">
         <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#d4af37] rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute top-1/4 left-1/4 hidden w-96 h-96 bg-[#d4af37] rounded-full blur-[120px] motion-safe:animate-pulse lg:block" />
           <div
-            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#fbbf24] rounded-full blur-[120px] animate-pulse"
+            className="absolute bottom-1/4 right-1/4 hidden w-96 h-96 bg-[#fbbf24] rounded-full blur-[120px] motion-safe:animate-pulse lg:block"
             style={{ animationDelay: "1s" }}
           />
         </div>
@@ -64,7 +64,7 @@ export default function LuxurySection() {
 
       <div className="relative max-w-7xl mx-auto">
         <div className="text-center mb-20">
-          <h2 className="font-[family-name:var(--font-cormorant)] text-6xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-white via-[#d4af37] to-white bg-clip-text text-transparent animate-fade-in">
+          <h2 className="font-[family-name:var(--font-cormorant)] text-6xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-white via-[#d4af37] to-white bg-clip-text text-transparent motion-safe:animate-fade-in">
             The Luxury of Certainty
           </h2>
           <div className="w-32 h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent mx-auto" />
@@ -108,7 +108,7 @@ export default function LuxurySection() {
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-px">
-        <div className="h-full bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-50 animate-pulse" />
+        <div className="h-full bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-50 motion-safe:animate-pulse" />
       </div>
     </section>
   )

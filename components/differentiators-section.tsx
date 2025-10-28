@@ -152,7 +152,10 @@ export default function DifferentiatorsSection() {
                     background:
                       "linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.3), transparent, rgba(212, 175, 55, 0.3))",
                     backgroundSize: "200% 200%",
-                    animation: hoveredIndex === index ? "shimmer 2s linear infinite" : "none",
+                    animation:
+                      !shouldReduceMotion && hoveredIndex === index
+                        ? "shimmer 2s linear infinite"
+                        : "none",
                   }}
                 />
 
@@ -186,11 +189,11 @@ export default function DifferentiatorsSection() {
                   </p>
                 </div>
 
-                {hoveredIndex === index && (
+                {hoveredIndex === index && !shouldReduceMotion && (
                   <>
-                    <div className="absolute top-4 right-4 w-1 h-1 bg-[#d4af37] rounded-full animate-ping" />
+                    <div className="absolute top-4 right-4 w-1 h-1 bg-[#d4af37] rounded-full motion-safe:animate-ping" />
                     <div
-                      className="absolute bottom-4 left-4 w-1 h-1 bg-white rounded-full animate-ping"
+                      className="absolute bottom-4 left-4 w-1 h-1 bg-white rounded-full motion-safe:animate-ping"
                       style={{ animationDelay: "0.3s" }}
                     />
                   </>
