@@ -17,6 +17,7 @@ export default function Hero() {
   const sceneRef = useRef<HTMLDivElement>(null)
   const [allowParallax, setAllowParallax] = useState(false)
   const [showDynamicBackground, setShowDynamicBackground] = useState(true)
+  const [showVideoBackground, setShowVideoBackground] = useState(true)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -45,9 +46,11 @@ export default function Hero() {
       const viewportWidth = window.innerWidth
       const canUseParallax = !prefersReducedMotion && viewportWidth >= 1024
       const shouldShowDynamicBackground = !prefersReducedMotion
+      const shouldShowVideo = !prefersReducedMotion && viewportWidth >= 1024
 
       setAllowParallax(canUseParallax)
       setShowDynamicBackground(shouldShowDynamicBackground)
+      setShowVideoBackground(shouldShowVideo)
 
       if (!canUseParallax && sceneRef.current) {
         sceneRef.current.style.transform = ""
@@ -119,18 +122,25 @@ export default function Hero() {
             ref={sceneRef}
             className="pointer-events-none absolute inset-0 min-h-[130vh] will-change-transform"
           >
-            <video
-              className="absolute inset-0 h-full w-full object-cover brightness-[1.2] contrast-[1.1]"
-              src="/earth-background.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              aria-hidden="true"
-            >
-              <source src="/earth-background.mp4" type="video/mp4" />
-            </video>
+            {showVideoBackground ? (
+              <video
+                className="absolute inset-0 h-full w-full object-cover brightness-[1.2] contrast-[1.1]"
+                src="/earth-background.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                aria-hidden="true"
+              >
+                <source src="/earth-background.mp4" type="video/mp4" />
+              </video>
+            ) : (
+              <div
+                className="absolute inset-0 h-full w-full bg-[radial-gradient(circle_at_center,_rgba(30,24,62,0.55),_rgba(6,5,15,0.9))]"
+                aria-hidden="true"
+              />
+            )}
             <div
               className="pointer-events-none absolute inset-0"
               style={{
