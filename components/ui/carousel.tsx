@@ -19,6 +19,10 @@ type CarouselProps = {
   plugins?: CarouselPlugin
   orientation?: 'horizontal' | 'vertical'
   setApi?: (api: CarouselApi) => void
+  autoPlay?: boolean
+  autoPlayInterval?: number
+  pauseOnHover?: boolean
+  pauseOnInteraction?: boolean
 }
 
 type CarouselContextProps = {
@@ -48,6 +52,10 @@ function Carousel({
   setApi,
   plugins,
   className,
+  autoPlay = false,
+  autoPlayInterval = 5000,
+  pauseOnHover = true,
+  pauseOnInteraction = true,
   children,
   ...props
 }: React.ComponentProps<'div'> & CarouselProps) {
@@ -60,6 +68,8 @@ function Carousel({
   )
   const [canScrollPrev, setCanScrollPrev] = React.useState(false)
   const [canScrollNext, setCanScrollNext] = React.useState(false)
+  const isHoveringRef = React.useRef(false)
+  const isPointerDownRef = React.useRef(false)
 
   const onSelect = React.useCallback((api: CarouselApi) => {
     if (!api) return
@@ -87,6 +97,44 @@ function Carousel({
     },
     [scrollPrev, scrollNext],
   )
+
+  React.useEffect(() => {
+    if (!api || !autoPlay) return
+
+    const handlePointerDown = () => {
+      if (pauseOnInteraction) {
+        isPointerDownRef.current = true
+      }
+    }
+
+    const handlePointerUp = () => {
+      if (pauseOnInteraction) {
+        isPointerDownRef.current = false
+      }
+    }
+
+    api.on('pointerDown', handlePointerDown)
+    api.on('pointerUp', handlePointerUp)
+
+    const interval = window.setInterval(() => {
+      if (pauseOnHover && isHoveringRef.current) return
+      if (pauseOnInteraction && isPointerDownRef.current) return
+      if (!api) return
+
+      if (!api.options.loop && !api.canScrollNext()) {
+        api.scrollTo(0)
+        return
+      }
+
+      api.scrollNext()
+    }, autoPlayInterval)
+
+    return () => {
+      window.clearInterval(interval)
+      api.off('pointerDown', handlePointerDown)
+      api.off('pointerUp', handlePointerUp)
+    }
+  }, [api, autoPlay, autoPlayInterval, pauseOnHover, pauseOnInteraction])
 
   React.useEffect(() => {
     if (!api || !setApi) return
@@ -120,6 +168,16 @@ function Carousel({
     >
       <div
         onKeyDownCapture={handleKeyDown}
+        onMouseEnter={() => {
+          if (pauseOnHover) {
+            isHoveringRef.current = true
+          }
+        }}
+        onMouseLeave={() => {
+          if (pauseOnHover) {
+            isHoveringRef.current = false
+          }
+        }}
         className={cn('relative', className)}
         role="region"
         aria-roledescription="carousel"

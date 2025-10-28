@@ -187,7 +187,9 @@ export default function ProofSection() {
 
               <div className="relative mt-10">
                 <Carousel
-                  opts={{ align: "center", loop: true, dragFree: true }}
+                  autoPlay
+                  autoPlayInterval={5000}
+                  opts={{ align: "center", loop: true }}
                   setApi={setPayoutApi}
                 >
                   <CarouselContent className="-ml-6 sm:-ml-8">
@@ -259,7 +261,9 @@ export default function ProofSection() {
 
               <div className="relative mt-10">
                 <Carousel
-                  opts={{ align: "center", loop: true, dragFree: true }}
+                  autoPlay
+                  autoPlayInterval={5000}
+                  opts={{ align: "center", loop: true }}
                   setApi={setTestimonialApi}
                 >
                   <CarouselContent className="-ml-6 sm:-ml-8">
