@@ -180,6 +180,11 @@ export default function ProofSection() {
                 </div>
               </div>
 
+              <div className="mt-6 flex items-center gap-2 text-[0.7rem] uppercase tracking-[0.4em] text-white/50 sm:hidden">
+                <span aria-hidden>→</span>
+                <span>Swipe to explore</span>
+              </div>
+
               <Carousel
                 className="mt-10"
                 opts={{ align: "center", loop: true, dragFree: true }}
@@ -242,6 +247,11 @@ export default function ProofSection() {
                   <Star className="h-4 w-4" fill="currentColor" stroke="none" />
                   <span>5.0 rating</span>
                 </div>
+              </div>
+
+              <div className="mt-6 flex items-center gap-2 text-[0.7rem] uppercase tracking-[0.4em] text-white/60 sm:hidden">
+                <span aria-hidden>→</span>
+                <span>Swipe for more</span>
               </div>
 
               <Carousel
