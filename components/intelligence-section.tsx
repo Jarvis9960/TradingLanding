@@ -1,6 +1,6 @@
 'use client'
 
-import type { CSSProperties } from "react"
+import { type CSSProperties, useRef } from "react"
 import { motion, useReducedMotion } from "framer-motion"
 
 import DataVisualization from "./data-visualization"
@@ -108,6 +108,7 @@ const sectionVariants = {
 
 export default function IntelligenceSection() {
   const prefersReducedMotion = useReducedMotion()
+  const sectionRef = useRef<HTMLElement>(null)
 
   return (
     <motion.section
