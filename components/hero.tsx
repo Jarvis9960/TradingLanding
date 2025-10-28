@@ -1,6 +1,3 @@
-"use client"
-
-import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
@@ -13,167 +10,16 @@ const highlights = [
 ]
 
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const sceneRef = useRef<HTMLDivElement>(null)
-  const [allowParallax, setAllowParallax] = useState(false)
-  const [showDynamicBackground, setShowDynamicBackground] = useState(false)
-  const [showVideoBackground, setShowVideoBackground] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-fade-in")
-          }
-        })
-      },
-      { threshold: 0.2 },
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
-
-    const updateEnvironment = () => {
-      const prefersReducedMotion = motionQuery.matches
-      const viewportWidth = window.innerWidth
-      const canUseParallax = !prefersReducedMotion && viewportWidth >= 1280
-      const shouldShowDynamicBackground = !prefersReducedMotion && viewportWidth >= 1280
-      const shouldShowVideo = !prefersReducedMotion && viewportWidth >= 1440
-
-      setAllowParallax(canUseParallax)
-      setShowDynamicBackground(shouldShowDynamicBackground)
-      setShowVideoBackground(shouldShowVideo)
-
-      if (!canUseParallax && sceneRef.current) {
-        sceneRef.current.style.transform = ""
-        sceneRef.current.style.opacity = ""
-      }
-    }
-
-    updateEnvironment()
-    window.addEventListener("resize", updateEnvironment)
-
-    const handleMotionChange = () => updateEnvironment()
-    if (motionQuery.addEventListener) {
-      motionQuery.addEventListener("change", handleMotionChange)
-    } else {
-      motionQuery.addListener(handleMotionChange)
-    }
-
-    return () => {
-      window.removeEventListener("resize", updateEnvironment)
-      if (motionQuery.removeEventListener) {
-        motionQuery.removeEventListener("change", handleMotionChange)
-      } else {
-        motionQuery.removeListener(handleMotionChange)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!allowParallax) {
-      return
-    }
-
-    const handleScroll = () => {
-      const progress = Math.min(window.scrollY / window.innerHeight, 1)
-      if (sceneRef.current) {
-        sceneRef.current.style.transform = `translate3d(0, ${progress * -140}px, 0) scale(${1 + progress * 0.25})`
-        sceneRef.current.style.opacity = String(1 - progress * 0.5)
-      }
-    }
-
-    handleScroll()
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [allowParallax])
-
   return (
     <section
-      ref={sectionRef}
-      className="relative z-10 flex min-h-screen flex-col items-center overflow-hidden bg-[#020203] px-4 pb-16 pt-12 text-white opacity-0"
+      className="relative z-10 flex min-h-screen flex-col items-center overflow-hidden bg-[#020203] px-4 pb-16 pt-12 text-white"
       data-hero-section
     >
       <div className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(246,212,125,0.12),_transparent_65%)]"
-          style={{ opacity: showDynamicBackground ? 0.2 : 1 }}
-        />
-        <div
-          className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(5,5,9,0.9),_rgba(8,8,14,0.55))]"
-          style={{ opacity: showDynamicBackground ? 0.3 : 1 }}
-        />
-      </div>
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 bg-[radial-gradient(circle,_rgba(150,116,255,0.35)_0%,_rgba(30,23,3,0.3)_55%,_transparent_80%)] blur-3xl"
-          style={{ opacity: showDynamicBackground ? 0.25 : 1 }}
-        />
-
-        <div className="absolute inset-[-18%]">
-          <div
-            ref={sceneRef}
-            className="pointer-events-none absolute inset-0 min-h-[130vh] will-change-transform"
-          >
-            {showVideoBackground ? (
-              <video
-                className="absolute inset-0 h-full w-full object-cover brightness-[1.2] contrast-[1.1]"
-                src="/earth-background.mp4"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-hidden="true"
-              >
-                <source src="/earth-background.mp4" type="video/mp4" />
-              </video>
-            ) : (
-              <div
-                className="absolute inset-0 h-full w-full bg-[radial-gradient(circle_at_center,_rgba(30,24,62,0.55),_rgba(6,5,15,0.9))]"
-                aria-hidden="true"
-              />
-            )}
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background: showDynamicBackground
-                  ? "linear-gradient(rgba(8,4,20,0.25), rgba(2,2,4,0.5))"
-                  : "radial-gradient(circle at center, rgba(8,4,20,0.32), rgba(2,2,4,0.85))",
-              }}
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#020203] via-[#020203]/90 to-transparent"
-              style={{ opacity: showDynamicBackground ? 0.45 : 1 }}
-            />
-            <div
-              className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-[#020203]/80 via-transparent to-transparent"
-              style={{ opacity: showDynamicBackground ? 0.4 : 1 }}
-            />
-          </div>
-        </div>
-
-        {showDynamicBackground && (
-          <>
-            <div className="absolute left-1/2 top-1/2 hidden h-[720px] w-[720px] -translate-x-1/2 -translate-y-1/2 lg:block">
-              <div className="absolute inset-0 rounded-full border border-white/10 bg-[radial-gradient(circle,_rgba(255,255,255,0.08)_0%,_rgba(246,212,125,0.18)_35%,_rgba(19,14,4,0)_72%)] opacity-30 blur-[50px] mix-blend-screen" />
-              <div className="absolute inset-10 rounded-full bg-[conic-gradient(from_120deg_at_50%_50%,rgba(246,212,125,0)_0deg,rgba(246,212,125,0.2)_120deg,rgba(38,24,8,0)_260deg)] opacity-35 blur-[60px] mix-blend-screen" />
-            </div>
-
-            <div className="absolute left-[18%] bottom-[18%] h-4 w-4 rounded-full bg-[#f6d47d]/60 shadow-[0_0_22px_8px_rgba(246,212,125,0.25)]" />
-            <div className="absolute right-[20%] top-[48%] h-3 w-3 rounded-full bg-white/60 shadow-[0_0_18px_6px_rgba(162,140,255,0.2)]" />
-            <div className="absolute left-[36%] top-[62%] h-2.5 w-2.5 rounded-full bg-[#b6a0ff]/50 shadow-[0_0_16px_5px_rgba(150,116,255,0.22)]" />
-          </>
-        )}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(246,212,125,0.12),_transparent_65%)] opacity-50" />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,_rgba(5,5,9,0.9),_rgba(8,8,14,0.55))]" />
+        <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-[#020203] via-[#020203]/80 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#020203] via-[#020203]/80 to-transparent" />
       </div>
 
       <div className="relative z-20 mx-auto flex w-full max-w-6xl items-center justify-between rounded-full border border-white/5 bg-white/5 px-4 py-2 backdrop-blur">
@@ -196,7 +42,7 @@ export default function Hero() {
           ))}
         </div>
         <a href="https://app.tradingwala.co.in/" target="_blank" rel="noopener noreferrer">
-          <Button className="rounded-full border border-[#f6d47d]/40 bg-[#f6d47d] px-6 py-2 text-sm font-semibold text-black transition-all duration-300 hover:-translate-y-1 hover:bg-[#ffde8f]">
+          <Button className="rounded-full border border-[#f6d47d]/40 bg-[#f6d47d] px-6 py-2 text-sm font-semibold text-black transition-colors duration-200 hover:bg-[#ffde8f]">
             Log In
           </Button>
         </a>
@@ -208,11 +54,9 @@ export default function Hero() {
         </span>
 
         <h1 className="text-4xl font-semibold leading-tight sm:text-6xl lg:text-7xl">
-          <span className="block font-[family-name:var(--font-playfair)]">
-            Built by traders
-          </span>
+          <span className="block font-[family-name:var(--font-playfair)]">Built by traders</span>
           <span className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-            <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-[22px] border border-[#f6d47d]/60 bg-[#f6d47d] text-[#160d02] shadow-[0_22px_65px_rgba(246,212,125,0.38)] sm:h-24 sm:w-24">
+            <span className="inline-flex h-16 w-16 items-center justify-center rounded-[22px] border border-[#f6d47d]/60 bg-[#f6d47d] text-[#160d02] shadow-[0_22px_65px_rgba(246,212,125,0.38)] sm:h-24 sm:w-24">
               <ArrowRight className="h-9 w-9 sm:h-12 sm:w-12" strokeWidth={3.2} />
             </span>
             <span className="font-[family-name:var(--font-playfair)] text-4xl font-semibold leading-tight sm:text-6xl lg:text-7xl">
@@ -221,23 +65,18 @@ export default function Hero() {
           </span>
         </h1>
 
-        <p className="max-w-2xl text-base text-white/70 sm:text-lg">
-          India&apos;s First Quantitative Forex Hedge
-        </p>
+        <p className="max-w-2xl text-base text-white/70 sm:text-lg">India&apos;s First Quantitative Forex Hedge</p>
 
         <Button
           asChild
-          className="group h-auto rounded-full border border-[#f6d47d]/50 bg-[#f6d47d] px-12 py-4 text-base font-semibold text-[#1a1202] shadow-[0_24px_55px_rgba(246,212,125,0.35)] transition-transform duration-300 hover:-translate-y-1 hover:bg-[#ffde8f]"
+          className="h-auto rounded-full border border-[#f6d47d]/50 bg-[#f6d47d] px-12 py-4 text-base font-semibold text-[#1a1202] shadow-[0_24px_55px_rgba(246,212,125,0.35)] transition-transform duration-200 hover:-translate-y-1 hover:bg-[#ffde8f]"
         >
           <Link href="https://app.tradingwala.co.in/" className="flex items-center gap-3">
             <span>Join the Revolutions</span>
-            <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={2.6} />
+            <ArrowRight className="h-5 w-5" strokeWidth={2.6} />
           </Link>
         </Button>
       </div>
-
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent via-[#020203]/80 to-[#020203]" />
     </section>
   )
 }
-
