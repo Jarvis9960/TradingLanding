@@ -25,44 +25,6 @@ const signalStreams = [
   },
 ]
 
-const microTiles = [
-  {
-    title: "Execution Pace",
-    metric: "x6 uplift",
-    accent: "from-[#f8c660]/25 via-transparent to-transparent",
-  },
-  {
-    title: "Risk Lens",
-    metric: "12μ drift",
-    accent: "from-[#67e9ff]/25 via-transparent to-transparent",
-  },
-  {
-    title: "Session Sync",
-    metric: "0 gaps",
-    accent: "from-[#a58bff]/25 via-transparent to-transparent",
-  },
-  {
-    title: "Route Memory",
-    metric: "180d",
-    accent: "from-[#4ff9c6]/25 via-transparent to-transparent",
-  },
-]
-
-const snapshotTiles = [
-  {
-    title: "Drawdown Guard",
-    metric: "0.13%",
-    detail: "Variance is throttled via staged throttles with automated unwind scripts on standby.",
-    accent: "from-[#f8c660]/40 via-transparent to-transparent",
-  },
-  {
-    title: "Coverage Arc",
-    metric: "40+ venues",
-    detail: "Cash, futures, and dark pools co-exist in a single canvas with impact weighting applied.",
-    accent: "from-[#67e9ff]/35 via-transparent to-transparent",
-  },
-]
-
 export default function DataVisualization() {
   return (
     <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-[#05070f]/85 p-8 shadow-[0_30px_90px_rgba(5,10,28,0.55)] backdrop-blur-2xl sm:p-10">
@@ -115,40 +77,7 @@ export default function DataVisualization() {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {microTiles.map((tile, index) => (
-            <div
-              key={tile.title}
-              className="relative overflow-hidden rounded-[26px] border border-white/10 bg-black/55 p-5 text-left shadow-[0_16px_50px_rgba(6,12,26,0.45)] opacity-0 transition duration-500 ease-out hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_24px_65px_rgba(8,14,32,0.55)] animate-fade-in-up"
-              style={{ animationDelay: `${360 + index * 110}ms` }}
-            >
-              <div className={`pointer-events-none absolute inset-0 rounded-[26px] bg-gradient-to-br ${tile.accent}`} aria-hidden="true" />
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.1),transparent_70%)]" aria-hidden="true" />
-              <div className="relative space-y-2">
-                <p className="text-[0.65rem] uppercase tracking-[0.4em] text-white/45">{tile.title}</p>
-                <p className="text-2xl font-semibold text-white">{tile.metric}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          {snapshotTiles.map((tile, index) => (
-            <div
-              key={tile.title}
-              className="relative overflow-hidden rounded-[26px] border border-white/10 bg-black/55 p-5 text-left shadow-[0_16px_50px_rgba(6,12,26,0.45)] opacity-0 transition duration-500 ease-out hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_24px_65px_rgba(8,14,32,0.55)] animate-fade-in-up"
-              style={{ animationDelay: `${420 + index * 140}ms` }}
-            >
-              <div className={`pointer-events-none absolute inset-0 rounded-[26px] bg-gradient-to-br ${tile.accent}`} aria-hidden="true" />
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.1),transparent_70%)]" aria-hidden="true" />
-              <div className="relative space-y-2">
-                <p className="text-[0.7rem] uppercase tracking-[0.35em] text-white/45">{tile.title}</p>
-                <p className="text-3xl font-semibold text-white">{tile.metric}</p>
-                <p className="break-words text-sm text-white/65">{tile.detail}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className="pointer-events-none h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent" aria-hidden="true" />
       </div>
     </div>
   )
