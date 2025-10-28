@@ -185,16 +185,16 @@ export default function ProofSection() {
                 <span>Swipe to explore</span>
               </div>
 
-              <Carousel
-                className="mt-10"
-                opts={{ align: "center", loop: true, dragFree: true }}
-                setApi={setPayoutApi}
-              >
-                <CarouselContent className="-ml-6 sm:-ml-8">
-                  {payouts.map((payout, index) => (
-                    <CarouselItem
-                      key={payout.id}
-                      className="basis-full pl-6 sm:basis-[70%] sm:pl-8 lg:basis-[55%]"
+              <div className="relative mt-10">
+                <Carousel
+                  opts={{ align: "center", loop: true, dragFree: true }}
+                  setApi={setPayoutApi}
+                >
+                  <CarouselContent className="-ml-6 sm:-ml-8">
+                    {payouts.map((payout, index) => (
+                      <CarouselItem
+                        key={payout.id}
+                        className="basis-full pl-6 sm:basis-[70%] sm:pl-8 lg:basis-[55%]"
                     >
                       <motion.article
                         style={payoutStyle(index)}
@@ -223,9 +223,12 @@ export default function ProofSection() {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="left-4 top-auto bottom-4 size-10 border-white/20 bg-black/40 text-white/80 backdrop-blur md:left-6" />
-                <CarouselNext className="right-4 top-auto bottom-4 size-10 border-white/20 bg-black/40 text-white/80 backdrop-blur md:right-6" />
-              </Carousel>
+                  <CarouselPrevious className="hidden size-10 border-white/20 bg-black/40 text-white/80 backdrop-blur sm:flex sm:left-4 sm:top-auto sm:bottom-4 md:left-6" />
+                  <CarouselNext className="hidden size-10 border-white/20 bg-black/40 text-white/80 backdrop-blur sm:flex sm:right-4 sm:top-auto sm:bottom-4 md:right-6" />
+                </Carousel>
+                <div className="pointer-events-none absolute inset-y-4 left-0 w-12 bg-gradient-to-r from-[#040306] via-[#040306]/70 to-transparent sm:hidden" />
+                <div className="pointer-events-none absolute inset-y-4 right-0 w-12 bg-gradient-to-l from-[#040306] via-[#040306]/70 to-transparent sm:hidden" />
+              </div>
             </div>
           </motion.div>
 
@@ -254,16 +257,16 @@ export default function ProofSection() {
                 <span>Swipe for more</span>
               </div>
 
-              <Carousel
-                className="mt-10"
-                opts={{ align: "center", loop: true, dragFree: true }}
-                setApi={setTestimonialApi}
-              >
-                <CarouselContent className="-ml-6 sm:-ml-8">
-                  {testimonials.map((testimonial, index) => (
-                    <CarouselItem
-                      key={testimonial.id}
-                      className="basis-full pl-6 sm:basis-[72%] sm:pl-8 lg:basis-[60%]"
+              <div className="relative mt-10">
+                <Carousel
+                  opts={{ align: "center", loop: true, dragFree: true }}
+                  setApi={setTestimonialApi}
+                >
+                  <CarouselContent className="-ml-6 sm:-ml-8">
+                    {testimonials.map((testimonial, index) => (
+                      <CarouselItem
+                        key={testimonial.id}
+                        className="basis-full pl-6 sm:basis-[72%] sm:pl-8 lg:basis-[60%]"
                     >
                       <motion.article
                         style={testimonialStyle(index)}
@@ -290,9 +293,12 @@ export default function ProofSection() {
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="left-4 top-auto bottom-4 size-10 border-white/20 bg-white/10 text-white/80 backdrop-blur md:left-6" />
-                <CarouselNext className="right-4 top-auto bottom-4 size-10 border-white/20 bg-white/10 text-white/80 backdrop-blur md:right-6" />
-              </Carousel>
+                  <CarouselPrevious className="hidden size-10 border-white/20 bg-white/10 text-white/80 backdrop-blur sm:flex sm:left-4 sm:top-auto sm:bottom-4 md:left-6" />
+                  <CarouselNext className="hidden size-10 border-white/20 bg-white/10 text-white/80 backdrop-blur sm:flex sm:right-4 sm:top-auto sm:bottom-4 md:right-6" />
+                </Carousel>
+                <div className="pointer-events-none absolute inset-y-4 left-0 w-12 bg-gradient-to-r from-[#06030f] via-[#06030f]/70 to-transparent sm:hidden" />
+                <div className="pointer-events-none absolute inset-y-4 right-0 w-12 bg-gradient-to-l from-[#06030f] via-[#06030f]/70 to-transparent sm:hidden" />
+              </div>
             </div>
           </motion.div>
         </div>
