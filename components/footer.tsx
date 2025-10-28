@@ -15,14 +15,17 @@ export default function Footer() {
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/70 to-transparent" aria-hidden />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#d4af37] to-transparent animate-shimmer" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#d4af37] to-transparent motion-safe:animate-shimmer" />
 
       <div className="relative z-10">
         <div className="text-center py-24 px-4 md:px-8">
           <div className="max-w-4xl mx-auto glass-strong rounded-3xl p-12 md:p-16 relative overflow-hidden">
             {/* Decorative elements */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#d4af37]/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full blur-3xl animate-pulse delay-1000" />
+            <div className="absolute top-0 right-0 hidden w-32 h-32 bg-[#d4af37]/10 rounded-full blur-3xl motion-safe:animate-pulse lg:block" />
+            <div
+              className="absolute bottom-0 left-0 hidden w-40 h-40 bg-white/5 rounded-full blur-3xl motion-safe:animate-pulse lg:block"
+              style={{ animationDelay: "1.2s" }}
+            />
 
             <div className="relative z-10">
               <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full glass text-sm text-[#d4af37]">
@@ -48,7 +51,7 @@ export default function Footer() {
                 />
                 <Button
                   size="lg"
-                  className="w-full sm:w-auto bg-[#d4af37] hover:bg-[#c4a137] text-black font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 animate-glow group whitespace-nowrap"
+                  className="w-full sm:w-auto bg-[#d4af37] hover:bg-[#c4a137] text-black font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 motion-safe:animate-glow group whitespace-nowrap"
                 >
                   Join the Revolution
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />

@@ -88,13 +88,15 @@ export default function ParticleBackground() {
     }
 
     const scroll = { value: window.scrollY }
+    let shouldRender = true
 
     const computeEnvironment = () => {
       const prefersReducedMotion = motionQuery.matches
       const currentWidth = window.innerWidth
+      const isTabletOrBelow = currentWidth < 1024
       const isMobile = currentWidth < 768
 
-      if (prefersReducedMotion) {
+      if (prefersReducedMotion || isTabletOrBelow) {
         return {
           shouldAnimate: false,
           layers: [] as LayerConfig[],
@@ -102,9 +104,9 @@ export default function ParticleBackground() {
         }
       }
 
-      const densityScale = isMobile ? 0.45 : 1
-      const speedScale = isMobile ? 0.75 : 1
-      const pointerScale = isMobile ? 0.35 : 1
+      const densityScale = currentWidth < 1440 ? 0.7 : 1
+      const speedScale = currentWidth < 1440 ? 0.85 : 1
+      const pointerScale = currentWidth < 1440 ? 0.65 : 1
 
       return {
         shouldAnimate: true,
@@ -132,6 +134,7 @@ export default function ParticleBackground() {
       activeLayers = env.layers
 
       if (!env.shouldAnimate) {
+        shouldRender = false
         cancelAnimationFrame(animationFrameId)
         ctx.clearRect(0, 0, width, height)
         canvas.style.display = "none"
@@ -140,6 +143,7 @@ export default function ParticleBackground() {
       }
 
       canvas.style.display = ""
+      shouldRender = true
       return true
     }
 
@@ -181,9 +185,11 @@ export default function ParticleBackground() {
     const resizeCanvas = () => {
       width = window.innerWidth
       height = window.innerHeight
-      syncEnvironment()
+      if (!syncEnvironment()) {
+        return
+      }
 
-      const ratio = window.devicePixelRatio || 1
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5)
       canvas.width = width * ratio
       canvas.height = height * ratio
       canvas.style.width = `${width}px`
@@ -205,8 +211,19 @@ export default function ParticleBackground() {
       pointer.targetY = height / 2
     }
 
+    const updateRenderState = () => {
+      const withinHeroBounds = scroll.value < height * 1.15
+      if (withinHeroBounds !== shouldRender) {
+        shouldRender = withinHeroBounds
+        if (!shouldRender) {
+          ctx.clearRect(0, 0, width, height)
+        }
+      }
+    }
+
     const handleScroll = () => {
       scroll.value = window.scrollY
+      updateRenderState()
     }
 
     const animate = (now: number) => {
