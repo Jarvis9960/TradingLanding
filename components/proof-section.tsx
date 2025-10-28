@@ -226,8 +226,8 @@ export default function ProofSection() {
                   <CarouselPrevious className="hidden size-10 border-white/20 bg-black/40 text-white/80 backdrop-blur sm:flex sm:left-4 sm:top-auto sm:bottom-4 md:left-6" />
                   <CarouselNext className="hidden size-10 border-white/20 bg-black/40 text-white/80 backdrop-blur sm:flex sm:right-4 sm:top-auto sm:bottom-4 md:right-6" />
                 </Carousel>
-                <div className="pointer-events-none absolute inset-y-4 left-0 w-12 bg-gradient-to-r from-[#040306] via-[#040306]/70 to-transparent sm:hidden" />
-                <div className="pointer-events-none absolute inset-y-4 right-0 w-12 bg-gradient-to-l from-[#040306] via-[#040306]/70 to-transparent sm:hidden" />
+                <div className="pointer-events-none absolute inset-y-4 left-0 w-12 bg-gradient-to-r from-[#f6d47d]/15 via-transparent to-transparent sm:hidden" />
+                <div className="pointer-events-none absolute inset-y-4 right-0 w-12 bg-gradient-to-l from-[#f6d47d]/15 via-transparent to-transparent sm:hidden" />
               </div>
             </div>
           </motion.div>
@@ -296,8 +296,8 @@ export default function ProofSection() {
                   <CarouselPrevious className="hidden size-10 border-white/20 bg-white/10 text-white/80 backdrop-blur sm:flex sm:left-4 sm:top-auto sm:bottom-4 md:left-6" />
                   <CarouselNext className="hidden size-10 border-white/20 bg-white/10 text-white/80 backdrop-blur sm:flex sm:right-4 sm:top-auto sm:bottom-4 md:right-6" />
                 </Carousel>
-                <div className="pointer-events-none absolute inset-y-4 left-0 w-12 bg-gradient-to-r from-[#06030f] via-[#06030f]/70 to-transparent sm:hidden" />
-                <div className="pointer-events-none absolute inset-y-4 right-0 w-12 bg-gradient-to-l from-[#06030f] via-[#06030f]/70 to-transparent sm:hidden" />
+                <div className="pointer-events-none absolute inset-y-4 left-0 w-12 bg-gradient-to-r from-[#f6d47d]/12 via-transparent to-transparent sm:hidden" />
+                <div className="pointer-events-none absolute inset-y-4 right-0 w-12 bg-gradient-to-l from-[#f6d47d]/12 via-transparent to-transparent sm:hidden" />
               </div>
             </div>
           </motion.div>
