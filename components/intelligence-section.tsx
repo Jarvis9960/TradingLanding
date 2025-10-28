@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useRef, type CSSProperties } from "react"
-import { motion, useAnimationControls, useInView, useReducedMotion } from "framer-motion"
+import type { CSSProperties } from "react"
+import { motion, useReducedMotion } from "framer-motion"
 
 import DataVisualization from "./data-visualization"
 
@@ -108,37 +108,14 @@ const sectionVariants = {
 
 export default function IntelligenceSection() {
   const prefersReducedMotion = useReducedMotion()
-  const controls = useAnimationControls()
-  const sectionRef = useRef<HTMLElement | null>(null)
-  const isInView = useInView(sectionRef, { once: true, amount: 0.35 })
-
-  useEffect(() => {
-    if (prefersReducedMotion) {
-      controls.set("visible")
-      return
-    }
-
-    if (isInView) {
-      controls.start("visible")
-    }
-  }, [controls, isInView, prefersReducedMotion])
-
-  useEffect(() => {
-    if (prefersReducedMotion) return
-
-    const fallback = setTimeout(() => {
-      controls.start("visible")
-    }, 800)
-
-    return () => clearTimeout(fallback)
-  }, [controls, prefersReducedMotion])
 
   return (
     <motion.section
       ref={sectionRef}
       variants={sectionVariants}
       initial={prefersReducedMotion ? "visible" : "hidden"}
-      animate={controls}
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.35 }}
       className="relative z-10 overflow-hidden px-6 py-28 text-white md:px-10"
     >
       <div className="pointer-events-none absolute inset-0 bg-[#02040a]" aria-hidden="true" />
