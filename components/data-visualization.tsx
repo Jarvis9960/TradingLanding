@@ -1,54 +1,33 @@
-"use client"
-
-import { useEffect, useState } from "react"
+const barHeights = [92, 68, 85, 74, 100, 64, 82, 70, 88, 76, 94, 72, 86, 78, 90, 66, 84, 80, 96, 73]
 
 export default function DataVisualization() {
-  const [bars, setBars] = useState<number[]>([])
-
-  useEffect(() => {
-    // Generate random data for animated bars
-    const generateData = () => {
-      const newBars = Array.from({ length: 20 }, () => Math.random() * 100)
-      setBars(newBars)
-    }
-
-    generateData()
-    const interval = setInterval(generateData, 2000)
-
-    return () => clearInterval(interval)
-  }, [])
-
   return (
-    <div className="glass-strong rounded-2xl p-8 relative overflow-hidden">
-      {/* Glowing effect */}
+    <div className="glass-strong relative overflow-hidden rounded-2xl p-8">
       <div className="absolute inset-0 bg-gradient-to-br from-[#d4af37]/10 to-transparent pointer-events-none" />
 
       <div className="relative z-10">
-        <div className="flex items-end justify-between h-64 gap-2">
-          {bars.map((height, index) => (
+        <div className="flex h-64 items-end justify-between gap-2">
+          {barHeights.map((height, index) => (
             <div
               key={index}
-              className="flex-1 bg-gradient-to-t from-[#d4af37] to-white rounded-t transition-all duration-1000 ease-out"
-              style={{
-                height: `${height}%`,
-                opacity: 0.7 + (height / 100) * 0.3,
-              }}
+              className="flex-1 rounded-t bg-gradient-to-t from-[#d4af37] to-white"
+              style={{ height: `${height}%`, opacity: 0.5 + height / 200 }}
             />
           ))}
         </div>
 
-        <div className="mt-8 grid grid-cols-3 gap-4">
-          <div className="text-center">
+        <div className="mt-8 grid grid-cols-3 gap-4 text-center">
+          <div>
             <div className="text-3xl font-bold text-[#d4af37]">99.7%</div>
-            <div className="text-sm text-gray-400 mt-1">Accuracy</div>
+            <div className="mt-1 text-sm text-gray-400">Accuracy</div>
           </div>
-          <div className="text-center">
+          <div>
             <div className="text-3xl font-bold text-[#d4af37]">{"<"}50ms</div>
-            <div className="text-sm text-gray-400 mt-1">Execution</div>
+            <div className="mt-1 text-sm text-gray-400">Execution</div>
           </div>
-          <div className="text-center">
+          <div>
             <div className="text-3xl font-bold text-[#d4af37]">24/7</div>
-            <div className="text-sm text-gray-400 mt-1">Active</div>
+            <div className="mt-1 text-sm text-gray-400">Active</div>
           </div>
         </div>
       </div>
