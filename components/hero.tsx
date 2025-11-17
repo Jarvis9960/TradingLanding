@@ -82,7 +82,12 @@ export default function Hero() {
           asChild
           className="h-auto rounded-full border border-[#f6d47d]/50 bg-[#f6d47d] px-12 py-4 text-base font-semibold text-[#1a1202] shadow-[0_24px_55px_rgba(246,212,125,0.35)] transition-transform duration-200 hover:-translate-y-1 hover:bg-[#ffde8f]"
         >
-          <Link href="https://app.tradingwala.co.in/" className="flex items-center gap-3">
+          <Link
+            href="https://wa.me/918879100011?text=Hi%2C%20I%20want%20to%20have%20an%20enquiry"
+            className="flex items-center gap-3"
+            target="_blank"
+            rel="noreferrer"
+          >
             <span>Join the Revolutions</span>
             <ArrowRight className="h-5 w-5" strokeWidth={2.6} />
           </Link>

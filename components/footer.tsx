@@ -6,6 +6,16 @@ import { useState } from "react"
 
 export default function Footer() {
   const [email, setEmail] = useState("")
+  const WHATSAPP_NUMBER = "918879100011"
+
+  const handleJoinClick = () => {
+    const trimmedEmail = email.trim()
+    const message = trimmedEmail
+      ? `I want to get an enquiry this is my email address: ${trimmedEmail}`
+      : "I want to get an enquiry"
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
+    window.open(url, "_blank")
+  }
 
   return (
     <footer className="relative z-10 overflow-hidden">
@@ -52,6 +62,7 @@ export default function Footer() {
                 <Button
                   size="lg"
                   className="w-full sm:w-auto bg-[#d4af37] hover:bg-[#c4a137] text-black font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 motion-safe:animate-glow group whitespace-nowrap"
+                  onClick={handleJoinClick}
                 >
                   Join the Revolution
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
